@@ -33,7 +33,7 @@ title: Posts
   </li>
 
   <li>
-    <h2><a href="(https://wallfacerlabs.substack.com/p/new-stablecoins-on-the-block">New stablecoins on the block</a></h2>
+    <h2><a href="https://wallfacerlabs.substack.com/p/new-stablecoins-on-the-block">New stablecoins on the block</a></h2>
     <span class="post-date">Feb 22, 2023</span>
     <p>A primer on Aave’s GHO and Curve’s crvUSD stablecoins.</p>
   </li>
