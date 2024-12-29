@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/inter/3.19.3/inter.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #FDF6E3;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      mix-blend-mode: multiply;
+      transition: all 0.8s ease-out;
+    }
+
+    .nav {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      z-index: 10;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav a {
+      color: rgba(50, 20, 0, 0.9);
+      text-decoration: none;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      font-weight: 400;
+      transition: color 0.3s ease;
+    }
+
+    .nav a:hover {
+      color: rgba(50, 20, 0, 1);
+    }
+
+    .brand {
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      z-index: 10;
+      color: rgba(50, 20, 0, 0.9);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="artContainer">
+    <div class="brand">Tyler Wallace</div>
+    <nav class="nav">
+      <a href="/about">About me</a>
+      <a href="/posts">Posts</a>
+    </nav>
+  </div>
+
+  <script>
+    function generateArt() {
+      const container = document.getElementById('artContainer');
+      // Preserve the navigation elements
+      const brand = container.querySelector('.brand');
+      const nav = container.querySelector('.nav');
+      container.innerHTML = '';
+      container.appendChild(brand);
+      container.appendChild(nav);
+      
+      const now = new Date();
+      const seed = now.getHours() + now.getMinutes() + now.getSeconds();
+      
+      const colors = [
+        'rgba(255, 85, 0, 0.6)',
+        'rgba(255, 150, 50, 0.6)',
+        'rgba(255, 60, 35, 0.6)',
+        'rgba(255, 125, 0, 0.6)'
+      ];
+
+      // Generate 2-4 shapes based on seed
+      const numShapes = 2 + (seed % 3);
+      
+      for (let i = 0; i < numShapes; i++) {
+        const shape = document.createElement('div');
+        shape.className = 'shape';
+        
+        // Larger base size
+        const baseSize = 400 + (seed % 300);
+        // Vary sizes based on index
+        const sizeMultiplier = 1 + (i * 0.3);
+        const size = baseSize * sizeMultiplier;
+        
+        // Adjust positioning to focus on bottom of screen
+        const leftRange = window.innerWidth - size;
+        const topRange = window.innerHeight - size;
+        const left = (seed * (i + 1)) % leftRange;
+        // Position shapes in bottom 2/3 of screen
+        const top = (window.innerHeight / 3) + ((seed * (i + 2)) % (topRange / 1.5));
+        
+        shape.style.width = `${size}px`;
+        shape.style.height = `${size}px`;
+        shape.style.left = `${left}px`;
+        shape.style.top = `${top}px`;
+        shape.style.backgroundColor = colors[i % colors.length];
+        
+        container.appendChild(shape);
+      }
+    }
+
+    generateArt();
+
+    // Mouse movement interaction
+    document.addEventListener('mousemove', (e) => {
+      const shapes = document.querySelectorAll('.shape');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      
+      shapes.forEach((shape, index) => {
+        const rect = shape.getBoundingClientRect();
+        const shapeX = rect.left + rect.width / 2;
+        const shapeY = rect.top + rect.height / 2;
+        
+        const deltaX = mouseX - shapeX;
+        const deltaY = mouseY - shapeY;
+        
+        const moveX = deltaX * 0.02 * (index + 1) / shapes.length;
+        const moveY = deltaY * 0.02 * (index + 1) / shapes.length;
+        
+        shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      });
+    });
+
+    // Click interaction
+    document.addEventListener('click', (e) => {
+      const shapes = document.querySelectorAll('.shape');
+      shapes.forEach((shape) => {
+        const hue = Math.random() * 60 + 15;
+        const saturation = Math.random() * 20 + 80;
+        const lightness = Math.random() * 20 + 50;
+        const alpha = 0.6;
+        
+        shape.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+        shape.style.transform += ' scale(1.1)';
+        
+        setTimeout(() => {
+          shape.style.transform = shape.style.transform.replace(' scale(1.1)', '');
+        }, 800);
+      });
+    });
+  </script>
+</body>
+</html>
