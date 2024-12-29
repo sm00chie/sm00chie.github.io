@@ -1,24 +1,158 @@
-<!-- _layouts/default.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title }} - {{ site.title }}</title>
+    <title>{{ page.title }} - Tyler Wallace</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/inter/3.19.3/inter.css" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        /* Base styles for all pages */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: #FDF6E3;
+            color: rgba(50, 20, 0, 0.9);
+        }
+
+        .nav {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 10;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: rgba(50, 20, 0, 0.9);
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: rgba(50, 20, 0, 1);
+        }
+
+        .brand {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 10;
+            color: rgba(50, 20, 0, 0.9);
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            font-weight: 400;
+        }
+
+        /* Content styles for about/posts pages */
+        .content {
+            max-width: 800px;
+            margin: 120px auto 60px;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+        }
+
+        .content h2 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin: 2rem 0 1rem;
+        }
+
+        .content p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .content a {
+            color: rgba(255, 85, 0, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .content a:hover {
+            color: rgba(255, 85, 0, 1);
+        }
+
+        /* Background shapes for non-home pages */
+        .background-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            mix-blend-mode: multiply;
+        }
+    </style>
 </head>
 <body>
-    <nav class="top-nav">
-        <a href="/" class="brand">Tyler Wallace</a>
-        <div class="nav-links">
-            <a href="/about">About me</a>
-            <a href="/posts">Posts</a>
-        </div>
+    <a href="/" class="brand">Tyler Wallace</a>
+    <nav class="nav">
+        <a href="/about">About me</a>
+        <a href="/posts">Posts</a>
     </nav>
-    
+
+    {% if page.url != "/" %}
+    <div class="background-shapes" id="backgroundShapes"></div>
+    {% endif %}
+
     <main class="content">
         {{ content }}
     </main>
+
+    {% if page.url != "/" %}
+    <script>
+        // Add subtle background shapes for non-home pages
+        function createBackgroundShapes() {
+            const container = document.getElementById('backgroundShapes');
+            const colors = [
+                'rgba(255, 85, 0, 0.3)',
+                'rgba(255, 150, 50, 0.3)',
+                'rgba(255, 60, 35, 0.3)'
+            ];
+            
+            // Create 2 large, subtle shapes
+            for (let i = 0; i < 2; i++) {
+                const shape = document.createElement('div');
+                shape.className = 'shape';
+                
+                const size = 600 + (i * 200);
+                const left = i === 0 ? '-20%' : '60%';
+                const top = i === 0 ? '60%' : '10%';
+                
+                shape.style.width = `${size}px`;
+                shape.style.height = `${size}px`;
+                shape.style.left = left;
+                shape.style.top = top;
+                shape.style.backgroundColor = colors[i];
+                
+                container.appendChild(shape);
+            }
+        }
+
+        createBackgroundShapes();
+    </script>
+    {% endif %}
 </body>
 </html>
