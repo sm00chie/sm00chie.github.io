@@ -14,6 +14,6 @@ I like to surf, make espresso, and study history.
 - [Twitter/X](https://x.com/0x7477/)
 - [LinkedIn](https://www.linkedin.com/in/wtwallace)
 
-## Current Work
+## Works
 
-Check out my writing on [Substack](https://substack.com/@wyler) and analytics work at [Dune](https://dune.com/tt_tyler).
+Read out some of my writings [here](/posts/) and my analytics work at [Dune](https://dune.com/tt_tyler).
