@@ -1,9 +1,7 @@
 ---
-layout: page
-title: About
+layout: default
+title: About me
 ---
-
-# About Me
 
 Hello! I'm Tyler, a crypto PM & data analyst and one of the founders of [vaults.fyi](https://vaults.fyi/).
 
