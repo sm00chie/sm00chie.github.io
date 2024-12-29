@@ -1,0 +1,8 @@
+# _config.yml
+title: Tyler Wallace
+description: Personal website and blog
+baseurl: ""
+url: "https://sm00chie.github.io/"
+
+# Build settings
+markdown: kramdown
