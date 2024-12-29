@@ -1,0 +1,92 @@
+/* assets/css/style.css */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background: #FDF6E3;
+    color: rgba(50, 20, 0, 0.9);
+    line-height: 1.6;
+}
+
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    z-index: 1000;
+}
+
+.brand {
+    color: rgba(50, 20, 0, 0.9);
+    text-decoration: none;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: rgba(50, 20, 0, 0.9);
+    text-decoration: none;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    font-weight: 400;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: rgba(50, 20, 0, 1);
+}
+
+.content {
+    max-width: 800px;
+    margin: 120px auto 60px;
+    padding: 0 2rem;
+}
+
+.page-content h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+}
+
+.page-content h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 2rem 0 1rem;
+}
+
+.page-content p {
+    margin-bottom: 1.5rem;
+}
+
+.page-content a {
+    color: rgba(255, 85, 0, 0.8);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.page-content a:hover {
+    color: rgba(255, 85, 0, 1);
+}
+
+.post-list {
+    list-style: none;
+    padding: 0;
+}
+
+.post-list li {
+    margin-bottom: 2rem;
+}
+
+.post-date {
+    font-size: 0.9rem;
+    color: rgba(50, 20, 0, 0.6);
+}
