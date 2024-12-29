@@ -1,9 +1,7 @@
 ---
-layout: page
+layout: default
 title: Posts
 ---
-
-# Posts
 
 <ul class="post-list">
   <li>
