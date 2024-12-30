@@ -43,6 +43,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid rgba(50, 20, 0, 0.1);
         }
 
         .desktop-brand {
@@ -146,7 +147,7 @@
             }
 
             .shape {
-                transform: scale(0.6);
+                transform: scale(1) !important;
             }
         }
     </style>
@@ -162,7 +163,7 @@
                 <a href="/about">About me</a>
                 <a href="/posts">Posts</a>
             </nav>
-            <button class="menu-button" aria-label="Toggle menu">
+            <button class="menu-button" id="menuButton" aria-label="Toggle menu">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -170,13 +171,13 @@
                 </svg>
             </button>
         </div>
-        <div class="mobile-menu">
+        <div class="mobile-menu" id="mobileMenu">
             <a href="/about">About me</a>
             <a href="/posts">Posts</a>
         </div>
     </div>
 
-  <script>
+    <script>
         function generateArt() {
             const container = document.getElementById('artContainer');
             // Preserve the navigation elements
@@ -201,39 +202,40 @@
             // Adjust base size based on viewport and device
             let baseSize;
             if (isMobile) {
-                // On mobile, make circles larger to fill bottom 60%
-                baseSize = Math.min(window.innerWidth * 0.8, window.innerHeight * 0.6);
+                // Make circles much larger on mobile
+                baseSize = Math.min(window.innerWidth * 1.5, window.innerHeight * 1.2);
             } else {
                 // Keep desktop sizing the same
                 const minDimension = Math.min(window.innerWidth, window.innerHeight);
                 baseSize = Math.min(400, minDimension * 0.4) + (seed % 100);
             }
 
-            const numShapes = 2 + (seed % 3);
+            const numShapes = isMobile ? 2 : (2 + (seed % 3));
             
             for (let i = 0; i < numShapes; i++) {
                 const shape = document.createElement('div');
                 shape.className = 'shape';
                 
-                const sizeMultiplier = isMobile ? (1 + (i * 0.2)) : (1 + (i * 0.3));
+                const sizeMultiplier = isMobile ? (1.2 + (i * 0.3)) : (1 + (i * 0.3));
                 const size = baseSize * sizeMultiplier;
                 
-                const leftRange = window.innerWidth - size;
-                const topRange = window.innerHeight - size;
+                const leftRange = window.innerWidth - (size * 0.5); // Allow circles to overflow
+                const topRange = window.innerHeight - (size * 0.5);  // Allow circles to overflow
                 
                 // Adjust vertical positioning for mobile
                 let top;
                 if (isMobile) {
-                    // Position shapes in bottom 60% of screen
-                    const mobileTopMin = window.innerHeight * 0.4; // Start at 40% from top
-                    const mobileTopMax = window.innerHeight * 0.8; // End at 80% from top
+                    // Position shapes to fill bottom half, allowing overflow
+                    const mobileTopMin = window.innerHeight * 0.3; // Start higher
+                    const mobileTopMax = window.innerHeight * 0.6; // End lower
                     top = mobileTopMin + ((seed * (i + 2)) % (mobileTopMax - mobileTopMin));
                 } else {
                     // Keep desktop positioning
                     top = (window.innerHeight / 3) + ((seed * (i + 2)) % (topRange / 1.5));
                 }
                 
-                const left = (seed * (i + 1)) % leftRange;
+                // Adjust horizontal positioning to ensure circles aren't completely off-screen
+                const left = Math.max(-size * 0.3, Math.min(leftRange, (seed * (i + 1)) % leftRange));
                 
                 shape.style.width = `${size}px`;
                 shape.style.height = `${size}px`;
@@ -254,25 +256,35 @@
             resizeTimeout = setTimeout(generateArt, 250);
         });
 
+        // Mobile menu toggle
+        const menuButton = document.getElementById('menuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
         // Mouse movement interaction
         document.addEventListener('mousemove', (e) => {
-            const shapes = document.querySelectorAll('.shape');
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            
-            shapes.forEach((shape, index) => {
-                const rect = shape.getBoundingClientRect();
-                const shapeX = rect.left + rect.width / 2;
-                const shapeY = rect.top + rect.height / 2;
+            if (window.innerWidth > 768) { // Only on desktop
+                const shapes = document.querySelectorAll('.shape');
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
                 
-                const deltaX = mouseX - shapeX;
-                const deltaY = mouseY - shapeY;
-                
-                const moveX = deltaX * 0.02 * (index + 1) / shapes.length;
-                const moveY = deltaY * 0.02 * (index + 1) / shapes.length;
-                
-                shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
-            });
+                shapes.forEach((shape, index) => {
+                    const rect = shape.getBoundingClientRect();
+                    const shapeX = rect.left + rect.width / 2;
+                    const shapeY = rect.top + rect.height / 2;
+                    
+                    const deltaX = mouseX - shapeX;
+                    const deltaY = mouseY - shapeY;
+                    
+                    const moveX = deltaX * 0.02 * (index + 1) / shapes.length;
+                    const moveY = deltaY * 0.02 * (index + 1) / shapes.length;
+                    
+                    shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                });
+            }
         });
 
         // Click interaction
