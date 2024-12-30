@@ -155,18 +155,21 @@
                 'rgba(255, 125, 0, 0.6)'
             ];
 
-            const baseSize = window.innerWidth * 0.8;
-            const numShapes = 3;
+            const now = Date.now();
+            const seed = (now % 10000) / 100;
+
+            const baseSize = window.innerWidth * (0.7 + (seed % 0.2));
+            const numShapes = 3 + Math.floor(seed % 3);
 
             for (let i = 0; i < numShapes; i++) {
                 const shape = document.createElement('div');
                 shape.className = 'shape';
 
-                const sizeMultiplier = 1 - (i * 0.1);
+                const sizeMultiplier = 1 - (i * 0.1 + (seed % 0.05));
                 const size = baseSize * sizeMultiplier;
 
-                const left = window.innerWidth - size * 1.2;
-                const top = window.innerHeight - size * 1.2;
+                const left = Math.random() * (window.innerWidth - size);
+                const top = Math.random() * (window.innerHeight - size);
 
                 shape.style.width = `${size}px`;
                 shape.style.height = `${size}px`;
