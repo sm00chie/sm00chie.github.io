@@ -1,36 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title }} - Tyler Wallace</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/inter/3.19.3/inter.css" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23FF5500'/></svg>">
-    
+
     <style>
-        /* Basic styles for body and html to ensure proper layout */
         html, body {
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            overflow: hidden;
             height: 100%;
-            font-family: 'Inter', sans-serif;
+            width: 100%;
+            position: fixed;
         }
 
         body {
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            background: #F5F5F5;
+            justify-content: center;
+            align-items: center;
+            background: #F5F5F5; /* Soft, neutral background */
+            font-family: 'Inter', sans-serif;
         }
 
-        /* Fixed navigation at the top */
+        .container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+
         .nav-container {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(245, 245, 245, 0.9); /* Soft transparency */
+            background: rgba(245, 245, 245, 0.7); /* Reduced transparency */
             backdrop-filter: blur(8px);
             padding: 1rem 2rem;
             z-index: 20;
@@ -78,6 +84,20 @@
             width: 100%;
         }
 
+        /* Hamburger Menu */
+        .hamburger-menu {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger-menu div {
+            width: 25px;
+            height: 3px;
+            background-color: rgba(50, 20, 0, 0.9);
+        }
+
         /* Mobile responsiveness */
         @media (max-width: 768px) {
             .nav-container {
@@ -96,44 +116,28 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 1rem;
+                display: none;
             }
 
-            .nav a {
-                font-size: 1.1rem;
-                font-weight: 500;
-                padding: 0.5rem 1rem;
+            .nav.open {
+                display: flex;
+            }
+
+            .hamburger-menu {
+                display: flex;
             }
         }
 
-        /* Main content section */
-        .container {
-            margin-top: 80px; /* Adds space for the fixed navigation */
-            padding: 1rem;
-            flex-grow: 1;
-            overflow-y: auto; /* Enables scrolling */
-            height: calc(100vh - 80px); /* Takes the entire screen minus nav height */
-        }
-
-        .content {
-            position: relative;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.7); /* Slightly opaque background */
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Shape styling for background art */
         .shape {
             position: absolute;
             border-radius: 50%;
             mix-blend-mode: normal;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); /* Soft glow effect */
             transition: transform 6s ease-out, background-color 0.3s ease, box-shadow 0.5s ease;
             animation: float 12s infinite alternate ease-in-out;
-            opacity: 0.3;
         }
 
+        /* Soft, fluid movement for floating effect */
         @keyframes float {
             0% {
                 transform: translate(0, 0) scale(1);
@@ -145,55 +149,69 @@
     </style>
 </head>
 <body>
-    <div class="nav-container">
-        <a href="/" class="brand">Tyler Wallace</a>
-        <nav class="nav">
-            <a href="/about">About me</a>
-            <a href="/posts">Posts</a>
-        </nav>
-    </div>
-
-    <div class="container">
-        <!-- This is where the dynamic content will be injected -->
-        <main class="content">
-            {{ content }}
-        </main>
+    <div class="container" id="artContainer">
+        <div class="nav-container">
+            <a href="/" class="brand">Tyler Wallace</a>
+            <div class="hamburger-menu" onclick="toggleNav()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <nav class="nav">
+                <a href="/about">About me</a>
+                <a href="/posts">Posts</a>
+                <a href="/contact">Contact</a> <!-- Added third link -->
+            </nav>
+        </div>
     </div>
 
     <script>
+        function toggleNav() {
+            const nav = document.querySelector('.nav');
+            nav.classList.toggle('open');
+        }
+
         function seededRandom(seed) {
             const x = Math.sin(seed++) * 10000;
             return x - Math.floor(x);
         }
 
         function generateArt() {
-            const container = document.querySelector('.container');
-            const numShapes = 3 + Math.floor(seededRandom(Date.now()) * 3); 
+            const container = document.getElementById('artContainer');
+            const navContainer = container.querySelector('.nav-container');
+            container.innerHTML = '';
+            container.appendChild(navContainer);
+
+            const now = Date.now();
+            const seed = now % 10000;
+
+            const colors = [
+                'rgba(255, 85, 0, 0.7)', // Rich orange
+                'rgba(255, 100, 50, 0.7)', // Warm coral
+                'rgba(100, 150, 255, 0.7)', // Soft blue
+                'rgba(50, 100, 150, 0.7)', // Muted teal
+                'rgba(200, 100, 50, 0.7)'  // Earthy brownish tone
+            ];
+
+            const numShapes = 3 + Math.floor(seededRandom(seed) * 3); // Limit to 3 to 5 shapes
 
             for (let i = 0; i < numShapes; i++) {
                 const shape = document.createElement('div');
                 shape.className = 'shape';
 
-                const sizeMultiplier = 0.4 + seededRandom(Date.now() + i) * 0.5;
+                const sizeMultiplier = 0.4 + seededRandom(seed + i) * 0.5; // More subtle size range
                 const size = window.innerWidth * sizeMultiplier;
 
-                const left = seededRandom(Date.now() + i * 2) * (window.innerWidth - size);
-                const top = seededRandom(Date.now() + i * 3) * (window.innerHeight - size);
+                const left = seededRandom(seed + i * 2) * (window.innerWidth - size);
+                const top = seededRandom(seed + i * 3) * (window.innerHeight - size);
 
                 shape.style.width = `${size}px`;
                 shape.style.height = `${size}px`;
                 shape.style.left = `${left}px`;
                 shape.style.top = `${top}px`;
 
-                const colors = [
-                    'rgba(255, 85, 0, 0.7)', 
-                    'rgba(255, 100, 50, 0.7)', 
-                    'rgba(100, 150, 255, 0.7)', 
-                    'rgba(50, 100, 150, 0.7)', 
-                    'rgba(200, 100, 50, 0.7)'  
-                ];
-
-                const gradient = `radial-gradient(circle, ${colors[Math.floor(seededRandom(Date.now() + i) * colors.length)]} 0%, rgba(255, 255, 255, 0) 100%)`;
+                // Richer colors with more visibility
+                const gradient = `radial-gradient(circle, ${colors[Math.floor(seededRandom(seed + i) * colors.length)]} 0%, rgba(255, 255, 255, 0) 100%)`;
                 shape.style.background = gradient;
 
                 container.appendChild(shape);
@@ -202,8 +220,10 @@
 
         generateArt();
 
+        let resizeTimeout;
         window.addEventListener('resize', () => {
-            generateArt();
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(generateArt, 250);
         });
 
         document.addEventListener('click', () => {
