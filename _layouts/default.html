@@ -5,31 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }} - Tyler Wallace</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/inter/3.19.3/inter.css" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23FF5500'/></svg>">
+    
     <style>
-        /* Base styles */
-        body {
+        html, body {
             margin: 0;
             padding: 0;
-            min-height: 100vh;
-            font-family: 'Inter', sans-serif;
-            background: #FDF6E3;
-            color: rgba(50, 20, 0, 0.9);
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+            position: fixed;
         }
 
-        /* Navigation (matching home page) */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #F5F5F5; /* Soft, neutral background */
+            font-family: 'Inter', sans-serif;
+        }
+
+        .container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
         .nav-container {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(253, 246, 227, 0.9);
+            background: rgba(245, 245, 245, 0.9); /* Soft transparency */
             backdrop-filter: blur(8px);
             padding: 1rem 2rem;
-            z-index: 10;
+            z-index: 20;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(50, 20, 0, 0.1);
+        }
+
+        .brand {
+            color: rgba(50, 20, 0, 0.9);
+            text-decoration: none;
+            font-size: 1.25rem;
+            letter-spacing: 0.1em;
+            font-weight: 400;
         }
 
         .nav {
@@ -37,174 +60,166 @@
             gap: 2rem;
         }
 
-        .nav a, .brand {
+        .nav a {
             color: rgba(50, 20, 0, 0.9);
             text-decoration: none;
             font-size: 1rem;
             letter-spacing: 0.05em;
             font-weight: 400;
             transition: color 0.3s ease;
-        }
-
-        .brand {
-            letter-spacing: 0.1em;
-        }
-
-        .nav a:hover, .brand:hover {
-            color: rgba(50, 20, 0, 1);
-        }
-
-        /* Content styles */
-        .content {
-            max-width: 800px;
-            margin: 100px auto 60px;
-            padding: 0 2rem;
             position: relative;
-            z-index: 1;
         }
 
-        .content h1 {
-            font-size: 2.5rem;
-            font-weight: 500;
-            margin-bottom: 2rem;
-        }
-
-        .content h2 {
-            font-size: 1.8rem;
-            font-weight: 500;
-            margin: 2rem 0 1rem;
-        }
-
-        .content p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .content a {
-            color: rgba(255, 85, 0, 0.8);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .content a:hover {
-            color: rgba(255, 85, 0, 1);
-        }
-
-        /* Posts styling */
-        .post-item {
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid rgba(50, 20, 0, 0.1);
-        }
-
-        .post-item:last-child {
-            border-bottom: none;
-        }
-
-        .post-date {
-            font-size: 0.9rem;
-            color: rgba(50, 20, 0, 0.6);
-            margin-bottom: 0.5rem;
-        }
-
-        /* Background shapes (matching home page generative art) */
-        .background-shapes {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        .shape {
+        .nav a::after {
+            content: '';
             position: absolute;
-            border-radius: 50%;
-            mix-blend-mode: multiply;
-            transition: all 0.8s ease-out;
+            width: 0;
+            height: 2px;
+            background: rgba(50, 20, 0, 0.9);
+            left: 0;
+            bottom: -4px;
+            transition: width 0.3s ease;
+        }
+
+        .nav a:hover::after {
+            width: 100%;
         }
 
         /* Mobile responsiveness */
         @media (max-width: 768px) {
             .nav-container {
-                padding: 1rem;
+                flex-direction: column;
+                padding: 0.75rem 1rem;
+                align-items: flex-start;
+            }
+
+            .brand {
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin-bottom: 1rem;
             }
 
             .nav {
+                flex-direction: column;
+                align-items: flex-start;
                 gap: 1rem;
             }
 
-            .content {
-                margin-top: 80px;
-                padding: 0 1rem;
+            .nav a {
+                font-size: 1.1rem;
+                font-weight: 500;
+                padding: 0.5rem 1rem;
             }
+        }
 
-            .content h1 {
-                font-size: 2rem;
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            mix-blend-mode: normal;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); /* Soft glow effect */
+            transition: transform 6s ease-out, background-color 0.3s ease, box-shadow 0.5s ease;
+            animation: float 12s infinite alternate ease-in-out;
+        }
+
+        /* Soft, fluid movement for floating effect */
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
             }
-
-            .content h2 {
-                font-size: 1.5rem;
-            }
-
-            /* Adjust shape sizes for mobile */
-            .shape {
-                transform: scale(0.7);
+            100% {
+                transform: translate(10px, -10px) scale(1.05);
             }
         }
     </style>
 </head>
 <body>
-    <div class="nav-container">
-        <a href="/" class="brand">Tyler Wallace</a>
-        <nav class="nav">
-            <a href="/about">About me</a>
-            <a href="/posts">Posts</a>
-        </nav>
+    <div class="container" id="artContainer">
+        <div class="nav-container">
+            <a href="/" class="brand">Tyler Wallace</a>
+            <nav class="nav">
+                <a href="/about">About me</a>
+                <a href="/posts">Posts</a>
+            </nav>
+        </div>
     </div>
-
-    {% if page.url != "/" %}
-    <div class="background-shapes" id="backgroundShapes"></div>
-    {% endif %}
 
     <main class="content">
         {{ content }}
     </main>
 
-    {% if page.url != "/" %}
     <script>
-        function createBackgroundShapes() {
-            const container = document.getElementById('backgroundShapes');
+        function seededRandom(seed) {
+            const x = Math.sin(seed++) * 10000;
+            return x - Math.floor(x);
+        }
+
+        function generateArt() {
+            const container = document.getElementById('artContainer');
+            const navContainer = container.querySelector('.nav-container');
+            container.innerHTML = '';
+            container.appendChild(navContainer);
+
+            const now = Date.now();
+            const seed = now % 10000;
+
             const colors = [
-                'rgba(255, 85, 0, 0.3)',
-                'rgba(255, 150, 50, 0.3)',
-                'rgba(255, 60, 35, 0.3)'
+                'rgba(255, 85, 0, 0.7)', // Rich orange
+                'rgba(255, 100, 50, 0.7)', // Warm coral
+                'rgba(100, 150, 255, 0.7)', // Soft blue
+                'rgba(50, 100, 150, 0.7)', // Muted teal
+                'rgba(200, 100, 50, 0.7)'  // Earthy brownish tone
             ];
-            
-            for (let i = 0; i < 2; i++) {
+
+            const numShapes = 3 + Math.floor(seededRandom(seed) * 3); // Limit to 3 to 5 shapes
+
+            for (let i = 0; i < numShapes; i++) {
                 const shape = document.createElement('div');
                 shape.className = 'shape';
-                
-                const size = 600 + (i * 200);
-                const left = i === 0 ? '-20%' : '60%';
-                const top = i === 0 ? '60%' : '10%';
-                
+
+                const sizeMultiplier = 0.4 + seededRandom(seed + i) * 0.5; // More subtle size range
+                const size = window.innerWidth * sizeMultiplier;
+
+                const left = seededRandom(seed + i * 2) * (window.innerWidth - size);
+                const top = seededRandom(seed + i * 3) * (window.innerHeight - size);
+
                 shape.style.width = `${size}px`;
                 shape.style.height = `${size}px`;
-                shape.style.left = left;
-                shape.style.top = top;
-                shape.style.backgroundColor = colors[i];
-                
+                shape.style.left = `${left}px`;
+                shape.style.top = `${top}px`;
+
+                // Richer colors with more visibility
+                const gradient = `radial-gradient(circle, ${colors[Math.floor(seededRandom(seed + i) * colors.length)]} 0%, rgba(255, 255, 255, 0) 100%)`;
+                shape.style.background = gradient;
+
                 container.appendChild(shape);
             }
         }
 
-        // Create shapes
-        createBackgroundShapes();
+        generateArt();
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(generateArt, 250);
+        });
+
+        document.addEventListener('click', () => {
+            const shapes = document.querySelectorAll('.shape');
+            shapes.forEach((shape) => {
+                const hue = Math.random() * 60 + 100;
+                const saturation = Math.random() * 40 + 60;
+                const lightness = Math.random() * 30 + 40;
+                const alpha = 0.6;
+
+                shape.style.transition = 'background-color 1s ease';
+                shape.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+                shape.style.transform += ' scale(1.1)';
+
+                setTimeout(() => {
+                    shape.style.transform = shape.style.transform.replace(' scale(1.1)', '');
+                }, 1000);
+            });
+        });
     </script>
-    {% endif %}
 </body>
 </html>
