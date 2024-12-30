@@ -110,7 +110,22 @@
     </div>
 
   <script>
-    function generateArt() {
+     // Mobile menu functionality
+        const menuButton = document.querySelector('.menu-button');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!menuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.remove('active');
+            }
+        });
+      
+      function generateArt() {
       const container = document.getElementById('artContainer');
       // Preserve the navigation elements
       const brand = container.querySelector('.brand');
