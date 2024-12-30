@@ -67,6 +67,22 @@
             letter-spacing: 0.05em;
             font-weight: 400;
             transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: rgba(50, 20, 0, 0.9);
+            left: 0;
+            bottom: -4px;
+            transition: width 0.3s ease;
+        }
+
+        .nav a:hover::after {
+            width: 100%;
         }
 
         /* Mobile responsiveness */
@@ -74,7 +90,7 @@
             .nav-container {
                 flex-direction: column;
                 padding: 0.75rem 1rem;
-                align-items: center;
+                align-items: flex-start;
             }
 
             .brand {
@@ -85,7 +101,7 @@
 
             .nav {
                 flex-direction: column;
-                align-items: center;
+                align-items: flex-start;
                 gap: 1rem;
             }
 
@@ -93,13 +109,6 @@
                 font-size: 1.1rem;
                 font-weight: 500;
                 padding: 0.5rem 1rem;
-                background: rgba(253, 246, 227, 0.8);
-                border-radius: 5px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-
-            .nav a:hover {
-                background-color: rgba(255, 85, 0, 0.1);
             }
         }
 
@@ -139,21 +148,18 @@
                 'rgba(255, 125, 0, 0.6)'
             ];
 
-            const baseSize = window.innerWidth * 0.7;
+            const baseSize = window.innerWidth * 0.8;
             const numShapes = 3;
 
             for (let i = 0; i < numShapes; i++) {
                 const shape = document.createElement('div');
                 shape.className = 'shape';
 
-                const sizeMultiplier = 1 + (i * 0.3);
+                const sizeMultiplier = 1 - (i * 0.1);
                 const size = baseSize * sizeMultiplier;
 
-                const leftRange = window.innerWidth - size;
-                const topRange = window.innerHeight - size;
-
-                const left = Math.random() * leftRange - size * 0.5;
-                const top = Math.random() * topRange - size * 0.5;
+                const left = window.innerWidth - size * 1.2;
+                const top = window.innerHeight - size * 1.2;
 
                 shape.style.width = `${size}px`;
                 shape.style.height = `${size}px`;
