@@ -102,6 +102,13 @@
                 background-color: rgba(255, 85, 0, 0.1);
             }
         }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            mix-blend-mode: multiply;
+            transition: all 0.8s ease-out;
+        }
     </style>
 </head>
 <body>
@@ -118,7 +125,6 @@
     <script>
         function generateArt() {
             const container = document.getElementById('artContainer');
-            // Preserve the navigation elements
             const navContainer = container.querySelector('.nav-container');
             container.innerHTML = '';
             container.appendChild(navContainer);
@@ -135,16 +141,36 @@
 
             const isMobile = window.innerWidth <= 768;
 
-            let baseSize = Math.min(window.innerWidth, window.innerHeight) * 0.6;
+            let baseSize;
+            if (isMobile) {
+                baseSize = Math.min(window.innerWidth * 1.5, window.innerHeight * 1.2);
+            } else {
+                const minDimension = Math.min(window.innerWidth, window.innerHeight);
+                baseSize = Math.min(400, minDimension * 0.4) + (seed % 100);
+            }
+
             const numShapes = isMobile ? 2 : 3;
 
             for (let i = 0; i < numShapes; i++) {
                 const shape = document.createElement('div');
                 shape.className = 'shape';
 
-                const size = baseSize * (1 - i * 0.2);
-                const left = Math.random() * (window.innerWidth - size);
-                const top = Math.random() * (window.innerHeight - size);
+                const sizeMultiplier = isMobile ? (1.2 + (i * 0.3)) : (1 + (i * 0.3));
+                const size = baseSize * sizeMultiplier;
+
+                const leftRange = window.innerWidth - (size * 0.5);
+                const topRange = window.innerHeight - (size * 0.5);
+
+                let top;
+                if (isMobile) {
+                    const mobileTopMin = window.innerHeight * 0.3;
+                    const mobileTopMax = window.innerHeight * 0.6;
+                    top = mobileTopMin + ((seed * (i + 2)) % (mobileTopMax - mobileTopMin));
+                } else {
+                    top = (window.innerHeight / 3) + ((seed * (i + 2)) % (topRange / 1.5));
+                }
+
+                const left = Math.max(-size * 0.3, Math.min(leftRange, (seed * (i + 1)) % leftRange));
 
                 shape.style.width = `${size}px`;
                 shape.style.height = `${size}px`;
@@ -158,8 +184,49 @@
 
         generateArt();
 
+        let resizeTimeout;
         window.addEventListener('resize', () => {
-            generateArt();
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(generateArt, 250);
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (window.innerWidth > 768) {
+                const shapes = document.querySelectorAll('.shape');
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+
+                shapes.forEach((shape, index) => {
+                    const rect = shape.getBoundingClientRect();
+                    const shapeX = rect.left + rect.width / 2;
+                    const shapeY = rect.top + rect.height / 2;
+
+                    const deltaX = mouseX - shapeX;
+                    const deltaY = mouseY - shapeY;
+
+                    const moveX = deltaX * 0.02 * (index + 1) / shapes.length;
+                    const moveY = deltaY * 0.02 * (index + 1) / shapes.length;
+
+                    shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                });
+            }
+        });
+
+        document.addEventListener('click', () => {
+            const shapes = document.querySelectorAll('.shape');
+            shapes.forEach((shape) => {
+                const hue = Math.random() * 60 + 15;
+                const saturation = Math.random() * 20 + 80;
+                const lightness = Math.random() * 20 + 50;
+                const alpha = 0.6;
+
+                shape.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+                shape.style.transform += ' scale(1.1)';
+
+                setTimeout(() => {
+                    shape.style.transform = shape.style.transform.replace(' scale(1.1)', '');
+                }, 800);
+            });
         });
     </script>
 </body>
