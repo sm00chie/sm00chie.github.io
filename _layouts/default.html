@@ -1,3 +1,4 @@
+<!-- _layouts/default.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,7 @@
     <title>{{ page.title }} - Tyler Wallace</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/inter/3.19.3/inter.css" rel="stylesheet">
     <style>
-        /* Base styles for all pages */
+        /* Base styles */
         body {
             margin: 0;
             padding: 0;
@@ -16,16 +17,27 @@
             color: rgba(50, 20, 0, 0.9);
         }
 
-        .nav {
+        /* Navigation */
+        .nav-container {
             position: fixed;
-            top: 2rem;
-            right: 2rem;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(253, 246, 227, 0.9);
+            backdrop-filter: blur(8px);
+            padding: 1rem 2rem;
             z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav {
             display: flex;
             gap: 2rem;
         }
 
-        .nav a {
+        .nav a, .brand {
             color: rgba(50, 20, 0, 0.9);
             text-decoration: none;
             font-size: 1rem;
@@ -34,26 +46,18 @@
             transition: color 0.3s ease;
         }
 
-        .nav a:hover {
+        .brand {
+            letter-spacing: 0.1em;
+        }
+
+        .nav a:hover, .brand:hover {
             color: rgba(50, 20, 0, 1);
         }
 
-        .brand {
-            position: fixed;
-            top: 2rem;
-            left: 2rem;
-            z-index: 10;
-            color: rgba(50, 20, 0, 0.9);
-            text-decoration: none;
-            font-size: 1rem;
-            letter-spacing: 0.1em;
-            font-weight: 400;
-        }
-
-        /* Content styles for about/posts pages */
+        /* Content styles */
         .content {
             max-width: 800px;
-            margin: 120px auto 60px;
+            margin: 100px auto 60px;
             padding: 0 2rem;
             position: relative;
             z-index: 1;
@@ -87,7 +91,24 @@
             color: rgba(255, 85, 0, 1);
         }
 
-        /* Background shapes for non-home pages */
+        /* Posts styling */
+        .post-item {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(50, 20, 0, 0.1);
+        }
+
+        .post-item:last-child {
+            border-bottom: none;
+        }
+
+        .post-date {
+            font-size: 0.9rem;
+            color: rgba(50, 20, 0, 0.6);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Background shapes */
         .background-shapes {
             position: fixed;
             top: 0;
@@ -103,15 +124,47 @@
             position: absolute;
             border-radius: 50%;
             mix-blend-mode: multiply;
+            transition: all 0.8s ease-out;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 1rem;
+            }
+
+            .nav {
+                gap: 1rem;
+            }
+
+            .content {
+                margin-top: 80px;
+                padding: 0 1rem;
+            }
+
+            .content h1 {
+                font-size: 2rem;
+            }
+
+            .content h2 {
+                font-size: 1.5rem;
+            }
+
+            /* Adjust shape sizes for mobile */
+            .shape {
+                transform: scale(0.7);
+            }
         }
     </style>
 </head>
 <body>
-    <a href="/" class="brand">Tyler Wallace</a>
-    <nav class="nav">
-        <a href="/about">About me</a>
-        <a href="/posts">Posts</a>
-    </nav>
+    <div class="nav-container">
+        <a href="/" class="brand">Tyler Wallace</a>
+        <nav class="nav">
+            <a href="/about">About me</a>
+            <a href="/posts">Posts</a>
+        </nav>
+    </div>
 
     {% if page.url != "/" %}
     <div class="background-shapes" id="backgroundShapes"></div>
@@ -123,7 +176,6 @@
 
     {% if page.url != "/" %}
     <script>
-        // Add subtle background shapes for non-home pages
         function createBackgroundShapes() {
             const container = document.getElementById('backgroundShapes');
             const colors = [
@@ -132,7 +184,6 @@
                 'rgba(255, 60, 35, 0.3)'
             ];
             
-            // Create 2 large, subtle shapes
             for (let i = 0; i < 2; i++) {
                 const shape = document.createElement('div');
                 shape.className = 'shape';
@@ -151,7 +202,47 @@
             }
         }
 
+        // Create shapes
         createBackgroundShapes();
+
+        // Click interaction
+        document.addEventListener('click', (e) => {
+            const shapes = document.querySelectorAll('.shape');
+            shapes.forEach((shape) => {
+                const hue = Math.random() * 60 + 15;
+                const saturation = Math.random() * 20 + 80;
+                const lightness = Math.random() * 20 + 50;
+                const alpha = 0.3;
+                
+                shape.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+                shape.style.transform += ' scale(1.1)';
+                
+                setTimeout(() => {
+                    shape.style.transform = shape.style.transform.replace(' scale(1.1)', '');
+                }, 800);
+            });
+        });
+
+        // Mouse movement interaction
+        document.addEventListener('mousemove', (e) => {
+            const shapes = document.querySelectorAll('.shape');
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            shapes.forEach((shape, index) => {
+                const rect = shape.getBoundingClientRect();
+                const shapeX = rect.left + rect.width / 2;
+                const shapeY = rect.top + rect.height / 2;
+                
+                const deltaX = mouseX - shapeX;
+                const deltaY = mouseY - shapeY;
+                
+                const moveX = deltaX * 0.02 * (index + 1) / shapes.length;
+                const moveY = deltaY * 0.02 * (index + 1) / shapes.length;
+                
+                shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+        });
     </script>
     {% endif %}
 </body>
