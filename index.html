@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/inter/3.19.3/inter.css" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23FF5500'/></svg>">
+    
     <style>
         html, body {
             margin: 0;
@@ -174,23 +176,7 @@
         </div>
     </div>
 
-    <script>
-        // Mobile menu functionality
-        const menuButton = document.querySelector('.menu-button');
-        const mobileMenu = document.querySelector('.mobile-menu');
-        
-        menuButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            mobileMenu.classList.toggle('active');
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!menuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
-                mobileMenu.classList.remove('active');
-            }
-        });
-
+  <script>
         function generateArt() {
             const container = document.getElementById('artContainer');
             // Preserve the navigation elements
@@ -210,22 +196,44 @@
                 'rgba(255, 125, 0, 0.6)'
             ];
 
-            // Adjust base size based on viewport
-            const minDimension = Math.min(window.innerWidth, window.innerHeight);
-            const baseSize = Math.min(400, minDimension * 0.4) + (seed % 100);
+            const isMobile = window.innerWidth <= 768;
+            
+            // Adjust base size based on viewport and device
+            let baseSize;
+            if (isMobile) {
+                // On mobile, make circles larger to fill bottom 60%
+                baseSize = Math.min(window.innerWidth * 0.8, window.innerHeight * 0.6);
+            } else {
+                // Keep desktop sizing the same
+                const minDimension = Math.min(window.innerWidth, window.innerHeight);
+                baseSize = Math.min(400, minDimension * 0.4) + (seed % 100);
+            }
+
             const numShapes = 2 + (seed % 3);
             
             for (let i = 0; i < numShapes; i++) {
                 const shape = document.createElement('div');
                 shape.className = 'shape';
                 
-                const sizeMultiplier = 1 + (i * 0.3);
+                const sizeMultiplier = isMobile ? (1 + (i * 0.2)) : (1 + (i * 0.3));
                 const size = baseSize * sizeMultiplier;
                 
                 const leftRange = window.innerWidth - size;
                 const topRange = window.innerHeight - size;
+                
+                // Adjust vertical positioning for mobile
+                let top;
+                if (isMobile) {
+                    // Position shapes in bottom 60% of screen
+                    const mobileTopMin = window.innerHeight * 0.4; // Start at 40% from top
+                    const mobileTopMax = window.innerHeight * 0.8; // End at 80% from top
+                    top = mobileTopMin + ((seed * (i + 2)) % (mobileTopMax - mobileTopMin));
+                } else {
+                    // Keep desktop positioning
+                    top = (window.innerHeight / 3) + ((seed * (i + 2)) % (topRange / 1.5));
+                }
+                
                 const left = (seed * (i + 1)) % leftRange;
-                const top = (window.innerHeight / 3) + ((seed * (i + 2)) % (topRange / 1.5));
                 
                 shape.style.width = `${size}px`;
                 shape.style.height = `${size}px`;
@@ -285,5 +293,6 @@
             });
         });
     </script>
+
 </body>
 </html>
