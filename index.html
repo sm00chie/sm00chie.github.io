@@ -142,40 +142,45 @@
     </div>
 
     <script>
+        function seededRandom(seed) {
+            const x = Math.sin(seed++) * 10000;
+            return x - Math.floor(x);
+        }
+
         function generateArt() {
             const container = document.getElementById('artContainer');
             const navContainer = container.querySelector('.nav-container');
             container.innerHTML = '';
             container.appendChild(navContainer);
 
+            const now = Date.now();
+            const seed = now % 10000;
+
             const colors = [
                 'rgba(255, 85, 0, 0.6)',
                 'rgba(255, 150, 50, 0.6)',
                 'rgba(255, 60, 35, 0.6)',
-                'rgba(255, 125, 0, 0.6)'
+                'rgba(255, 125, 0, 0.6)',
+                'rgba(200, 100, 50, 0.5)'
             ];
 
-            const now = Date.now();
-            const seed = (now % 10000) / 100;
-
-            const baseSize = window.innerWidth * (0.7 + (seed % 0.2));
-            const numShapes = 3 + Math.floor(seed % 3);
+            const numShapes = 2 + Math.floor(seededRandom(seed) * 4); // Generate between 2 and 5 shapes
 
             for (let i = 0; i < numShapes; i++) {
                 const shape = document.createElement('div');
                 shape.className = 'shape';
 
-                const sizeMultiplier = 1 - (i * 0.1 + (seed % 0.05));
-                const size = baseSize * sizeMultiplier;
+                const sizeMultiplier = 0.4 + seededRandom(seed + i) * 0.6;
+                const size = window.innerWidth * sizeMultiplier;
 
-                const left = Math.random() * (window.innerWidth - size);
-                const top = Math.random() * (window.innerHeight - size);
+                const left = seededRandom(seed + i * 2) * (window.innerWidth - size);
+                const top = seededRandom(seed + i * 3) * (window.innerHeight - size);
 
                 shape.style.width = `${size}px`;
                 shape.style.height = `${size}px`;
                 shape.style.left = `${left}px`;
                 shape.style.top = `${top}px`;
-                shape.style.backgroundColor = colors[i % colors.length];
+                shape.style.backgroundColor = colors[Math.floor(seededRandom(seed + i) * colors.length)];
 
                 container.appendChild(shape);
             }
