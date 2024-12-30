@@ -22,41 +22,31 @@
             height: 100vh;
         }
 
-        .header-container {
+        .nav-container {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             background: rgba(253, 246, 227, 0.9);
             backdrop-filter: blur(8px);
+            padding: 1rem 2rem;
             z-index: 10;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
         }
 
-        .nav-container {
-            width: 100%;
-            padding: 1rem 2rem;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: flex-end;
+        .brand {
+            color: rgba(50, 20, 0, 0.9);
+            text-decoration: none;
+            font-size: 1.25rem;
+            letter-spacing: 0.1em;
+            font-weight: 400;
         }
 
         .nav {
             display: flex;
             gap: 2rem;
-        }
-
-        .brand {
-            width: 100%;
-            text-align: center;
-            padding: 1rem 0 1.5rem;
-            color: rgba(50, 20, 0, 0.9);
-            text-decoration: none;
-            font-size: 1.5rem;
-            letter-spacing: 0.1em;
-            font-weight: 400;
         }
 
         .nav a {
@@ -66,6 +56,43 @@
             letter-spacing: 0.05em;
             font-weight: 400;
             transition: color 0.3s ease;
+        }
+
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            background: rgba(253, 246, 227, 0.95);
+            padding: 1rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: rgba(50, 20, 0, 0.9);
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+            transition: background-color 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .mobile-menu.active {
+            display: block;
         }
 
         .shape {
@@ -81,13 +108,16 @@
                 padding: 0.75rem 1rem;
             }
 
-            .nav {
-                gap: 1.25rem;
+            .brand {
+                font-size: 1rem;
             }
 
-            .brand {
-                font-size: 1.25rem;
-                padding: 0.75rem 0 1rem;
+            .nav {
+                display: none;
+            }
+
+            .menu-button {
+                display: block;
             }
 
             .shape {
@@ -98,14 +128,26 @@
 </head>
 <body>
     <div class="container" id="artContainer">
-        <div class="header-container">
-            <div class="nav-container">
-                <nav class="nav">
-                    <a href="/about">About me</a>
-                    <a href="/posts">Posts</a>
-                </nav>
-            </div>
-            <a href="/" class="brand">Tyler Wallace</a>
+        <div class="nav-container">
+            <a href="/" class="brand">
+                <span class="desktop-brand">Tyler Wallace</span>
+                <span class="mobile-brand">TW</span>
+            </a>
+            <nav class="nav">
+                <a href="/about">About me</a>
+                <a href="/posts">Posts</a>
+            </nav>
+            <button class="menu-button" aria-label="Toggle menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="mobile-menu">
+            <a href="/about">About me</a>
+            <a href="/posts">Posts</a>
         </div>
     </div>
 
