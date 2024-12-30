@@ -12,11 +12,11 @@
             padding: 0;
             min-height: 100vh;
             font-family: 'Inter', sans-serif;
-            background: #F5F5F5; /* Soft background like homepage */
+            background: #FDF6E3;
             color: rgba(50, 20, 0, 0.9);
         }
 
-        /* Navigation */
+        /* Navigation (matching home page) */
         .nav-container {
             position: fixed;
             top: 0;
@@ -29,6 +29,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid rgba(50, 20, 0, 0.1);
         }
 
         .nav {
@@ -55,11 +56,9 @@
 
         /* Content styles */
         .content {
-            margin-top: 120px; /* Adjusted for fixed navbar */
-            padding: 2rem;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 800px;
+            margin: 100px auto 60px;
+            padding: 0 2rem;
             position: relative;
             z-index: 1;
         }
@@ -92,7 +91,24 @@
             color: rgba(255, 85, 0, 1);
         }
 
-        /* Background shapes */
+        /* Posts styling */
+        .post-item {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(50, 20, 0, 0.1);
+        }
+
+        .post-item:last-child {
+            border-bottom: none;
+        }
+
+        .post-date {
+            font-size: 0.9rem;
+            color: rgba(50, 20, 0, 0.6);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Background shapes (matching home page generative art) */
         .background-shapes {
             position: fixed;
             top: 0;
@@ -111,18 +127,6 @@
             transition: all 0.8s ease-out;
         }
 
-        /* Overlay for text readability */
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.7); /* Light overlay for contrast */
-            z-index: 2;
-            pointer-events: none;
-        }
-
         /* Mobile responsiveness */
         @media (max-width: 768px) {
             .nav-container {
@@ -134,8 +138,8 @@
             }
 
             .content {
-                padding: 1.5rem;
-                margin-top: 100px;
+                margin-top: 80px;
+                padding: 0 1rem;
             }
 
             .content h1 {
@@ -164,12 +168,11 @@
 
     {% if page.url != "/" %}
     <div class="background-shapes" id="backgroundShapes"></div>
-    <div class="overlay"></div> <!-- Overlay to enhance text visibility -->
     {% endif %}
 
-    <div class="content">
+    <main class="content">
         {{ content }}
-    </div>
+    </main>
 
     {% if page.url != "/" %}
     <script>
@@ -199,47 +202,8 @@
             }
         }
 
-        // Create background shapes
+        // Create shapes
         createBackgroundShapes();
-
-        // Click interaction
-        document.addEventListener('click', (e) => {
-            const shapes = document.querySelectorAll('.shape');
-            shapes.forEach((shape) => {
-                const hue = Math.random() * 60 + 15;
-                const saturation = Math.random() * 20 + 80;
-                const lightness = Math.random() * 20 + 50;
-                const alpha = 0.3;
-                
-                shape.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
-                shape.style.transform += ' scale(1.1)';
-                
-                setTimeout(() => {
-                    shape.style.transform = shape.style.transform.replace(' scale(1.1)', '');
-                }, 800);
-            });
-        });
-
-        // Mouse movement interaction
-        document.addEventListener('mousemove', (e) => {
-            const shapes = document.querySelectorAll('.shape');
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            
-            shapes.forEach((shape, index) => {
-                const rect = shape.getBoundingClientRect();
-                const shapeX = rect.left + rect.width / 2;
-                const shapeY = rect.top + rect.height / 2;
-                
-                const deltaX = mouseX - shapeX;
-                const deltaY = mouseY - shapeY;
-                
-                const moveX = deltaX * 0.02 * (index + 1) / shapes.length;
-                const moveY = deltaY * 0.02 * (index + 1) / shapes.length;
-                
-                shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
-            });
-        });
     </script>
     {% endif %}
 </body>
