@@ -20,7 +20,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #FDF6E3;
+            background: #F5F5F5; /* Soft, neutral background */
             font-family: 'Inter', sans-serif;
         }
 
@@ -36,7 +36,7 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(253, 246, 227, 0.9);
+            background: rgba(245, 245, 245, 0.9); /* Soft transparency */
             backdrop-filter: blur(8px);
             padding: 1rem 2rem;
             z-index: 20;
@@ -54,79 +54,22 @@
             font-weight: 400;
         }
 
-        .nav {
-            display: flex;
-            flex-direction: row;
-            gap: 2rem;
-        }
-
-        .nav a {
-            color: rgba(50, 20, 0, 0.9);
-            text-decoration: none;
-            font-size: 1rem;
-            letter-spacing: 0.05em;
-            font-weight: 400;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background: rgba(50, 20, 0, 0.9);
-            left: 0;
-            bottom: -4px;
-            transition: width 0.3s ease;
-        }
-
-        .nav a:hover::after {
-            width: 100%;
-        }
-
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
-                padding: 0.75rem 1rem;
-                align-items: flex-start;
-            }
-
-            .brand {
-                font-size: 1.5rem;
-                font-weight: 600;
-                margin-bottom: 1rem;
-            }
-
-            .nav {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-
-            .nav a {
-                font-size: 1.1rem;
-                font-weight: 500;
-                padding: 0.5rem 1rem;
-            }
-        }
-
         .shape {
             position: absolute;
             border-radius: 50%;
-            mix-blend-mode: multiply;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
-            transition: transform 4s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
-            animation: float 6s infinite alternate ease-in-out;
+            mix-blend-mode: normal;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); /* Soft glow effect */
+            transition: transform 6s ease-out, background-color 0.3s ease, box-shadow 0.5s ease;
+            animation: float 12s infinite alternate ease-in-out;
         }
 
+        /* Soft, fluid movement for floating effect */
         @keyframes float {
             0% {
-                transform: translate(0, 0);
+                transform: translate(0, 0) scale(1);
             }
             100% {
-                transform: translate(25px, -25px); /* Slightly more subtle movement */
+                transform: translate(10px, -10px) scale(1.05);
             }
         }
     </style>
@@ -158,20 +101,20 @@
             const seed = now % 10000;
 
             const colors = [
-                'rgba(255, 85, 0, 0.6)',
-                'rgba(255, 150, 50, 0.6)',
-                'rgba(255, 60, 35, 0.6)',
-                'rgba(255, 125, 0, 0.6)',
-                'rgba(200, 100, 50, 0.5)'
+                'rgba(203, 184, 219, 0.6)', // Soft lavender
+                'rgba(180, 233, 235, 0.6)', // Light teal
+                'rgba(237, 227, 204, 0.6)', // Pale yellow
+                'rgba(227, 224, 255, 0.5)', // Soft blue
+                'rgba(255, 200, 180, 0.6)'  // Warm pinkish tone
             ];
 
-            const numShapes = 2 + Math.floor(seededRandom(seed) * 4); // Generate between 2 and 5 shapes
+            const numShapes = 3 + Math.floor(seededRandom(seed) * 4); // Generate between 3 and 6 shapes
 
             for (let i = 0; i < numShapes; i++) {
                 const shape = document.createElement('div');
                 shape.className = 'shape';
 
-                const sizeMultiplier = 0.4 + seededRandom(seed + i) * 0.6;
+                const sizeMultiplier = 0.4 + seededRandom(seed + i) * 0.5; // More subtle size range
                 const size = window.innerWidth * sizeMultiplier;
 
                 const left = seededRandom(seed + i * 2) * (window.innerWidth - size);
@@ -182,8 +125,8 @@
                 shape.style.left = `${left}px`;
                 shape.style.top = `${top}px`;
 
-                // Add a subtle gradient for a more dynamic look
-                const gradient = `radial-gradient(circle, rgba(255, 85, 0, 0.6) 0%, rgba(255, 150, 50, 0.6) 100%)`;
+                // Soft pastel gradients to match Turrell's light aesthetics
+                const gradient = `radial-gradient(circle, ${colors[Math.floor(seededRandom(seed + i) * colors.length)]} 0%, rgba(255, 255, 255, 0) 100%)`;
                 shape.style.background = gradient;
 
                 container.appendChild(shape);
@@ -200,4 +143,22 @@
 
         document.addEventListener('click', () => {
             const shapes = document.querySelectorAll('.shape');
-            shapes.for
+            shapes.forEach((shape) => {
+                // Smoothly transition between subtle color shifts, inspired by light color shifts in Turrell's works
+                const hue = Math.random() * 40 + 180;
+                const saturation = Math.random() * 30 + 50;
+                const lightness = Math.random() * 30 + 60;
+                const alpha = 0.5;
+
+                shape.style.transition = 'background-color 1s ease';
+                shape.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+                shape.style.transform += ' scale(1.1)';
+
+                setTimeout(() => {
+                    shape.style.transform = shape.style.transform.replace(' scale(1.1)', '');
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
