@@ -8,30 +8,23 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23FF5500'/></svg>">
     
     <style>
+        /* Basic styles for body and html to ensure proper layout */
         html, body {
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            overflow-x: hidden;
             height: 100%;
-            width: 100%;
-            position: fixed;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #F5F5F5; /* Soft, neutral background */
-            font-family: 'Inter', sans-serif;
+            flex-direction: column;
+            justify-content: flex-start;
+            background: #F5F5F5;
         }
 
-        .container {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
+        /* Fixed navigation at the top */
         .nav-container {
             position: fixed;
             top: 0;
@@ -112,17 +105,35 @@
             }
         }
 
+        /* Main content section */
+        .container {
+            margin-top: 80px; /* Adds space for the fixed navigation */
+            padding: 1rem;
+            flex-grow: 1;
+            overflow-y: auto; /* Enables scrolling */
+            height: calc(100vh - 80px); /* Takes the entire screen minus nav height */
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.7); /* Slightly opaque background */
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Shape styling for background art */
         .shape {
             position: absolute;
             border-radius: 50%;
             mix-blend-mode: normal;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); /* Soft glow effect */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             transition: transform 6s ease-out, background-color 0.3s ease, box-shadow 0.5s ease;
             animation: float 12s infinite alternate ease-in-out;
-            opacity: 0.3; /* Reduced opacity */
+            opacity: 0.3;
         }
 
-        /* Soft, fluid movement for floating effect */
         @keyframes float {
             0% {
                 transform: translate(0, 0) scale(1);
@@ -131,31 +142,23 @@
                 transform: translate(10px, -10px) scale(1.05);
             }
         }
-
-        .content {
-            position: relative;
-            z-index: 10; /* Ensure text is on top */
-            background: rgba(255, 255, 255, 0.7); /* Slightly opaque background */
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
     </style>
 </head>
 <body>
-    <div class="container" id="artContainer">
-        <div class="nav-container">
-            <a href="/" class="brand">Tyler Wallace</a>
-            <nav class="nav">
-                <a href="/about">About me</a>
-                <a href="/posts">Posts</a>
-            </nav>
-        </div>
+    <div class="nav-container">
+        <a href="/" class="brand">Tyler Wallace</a>
+        <nav class="nav">
+            <a href="/about">About me</a>
+            <a href="/posts">Posts</a>
+        </nav>
     </div>
 
-    <main class="content">
-        {{ content }}
-    </main>
+    <div class="container">
+        <!-- This is where the dynamic content will be injected -->
+        <main class="content">
+            {{ content }}
+        </main>
+    </div>
 
     <script>
         function seededRandom(seed) {
@@ -164,72 +167,5 @@
         }
 
         function generateArt() {
-            const container = document.getElementById('artContainer');
-            const navContainer = container.querySelector('.nav-container');
-            container.innerHTML = '';
-            container.appendChild(navContainer);
-
-            const now = Date.now();
-            const seed = now % 10000;
-
-            const colors = [
-                'rgba(255, 85, 0, 0.7)', // Rich orange
-                'rgba(255, 100, 50, 0.7)', // Warm coral
-                'rgba(100, 150, 255, 0.7)', // Soft blue
-                'rgba(50, 100, 150, 0.7)', // Muted teal
-                'rgba(200, 100, 50, 0.7)'  // Earthy brownish tone
-            ];
-
-            const numShapes = 3 + Math.floor(seededRandom(seed) * 3); // Limit to 3 to 5 shapes
-
-            for (let i = 0; i < numShapes; i++) {
-                const shape = document.createElement('div');
-                shape.className = 'shape';
-
-                const sizeMultiplier = 0.4 + seededRandom(seed + i) * 0.5; // More subtle size range
-                const size = window.innerWidth * sizeMultiplier;
-
-                const left = seededRandom(seed + i * 2) * (window.innerWidth - size);
-                const top = seededRandom(seed + i * 3) * (window.innerHeight - size);
-
-                shape.style.width = `${size}px`;
-                shape.style.height = `${size}px`;
-                shape.style.left = `${left}px`;
-                shape.style.top = `${top}px`;
-
-                // Richer colors with more visibility
-                const gradient = `radial-gradient(circle, ${colors[Math.floor(seededRandom(seed + i) * colors.length)]} 0%, rgba(255, 255, 255, 0) 100%)`;
-                shape.style.background = gradient;
-
-                container.appendChild(shape);
-            }
-        }
-
-        generateArt();
-
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(generateArt, 250);
-        });
-
-        document.addEventListener('click', () => {
-            const shapes = document.querySelectorAll('.shape');
-            shapes.forEach((shape) => {
-                const hue = Math.random() * 60 + 100;
-                const saturation = Math.random() * 40 + 60;
-                const lightness = Math.random() * 30 + 40;
-                const alpha = 0.6;
-
-                shape.style.transition = 'background-color 1s ease';
-                shape.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
-                shape.style.transform += ' scale(1.1)';
-
-                setTimeout(() => {
-                    shape.style.transform = shape.style.transform.replace(' scale(1.1)', '');
-                }, 1000);
-            });
-        });
-    </script>
-</body>
-</html>
+            const container = document.querySelector('.container');
+         
