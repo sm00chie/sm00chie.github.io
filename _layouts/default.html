@@ -168,4 +168,61 @@
 
         function generateArt() {
             const container = document.querySelector('.container');
-         
+            const numShapes = 3 + Math.floor(seededRandom(Date.now()) * 3); 
+
+            for (let i = 0; i < numShapes; i++) {
+                const shape = document.createElement('div');
+                shape.className = 'shape';
+
+                const sizeMultiplier = 0.4 + seededRandom(Date.now() + i) * 0.5;
+                const size = window.innerWidth * sizeMultiplier;
+
+                const left = seededRandom(Date.now() + i * 2) * (window.innerWidth - size);
+                const top = seededRandom(Date.now() + i * 3) * (window.innerHeight - size);
+
+                shape.style.width = `${size}px`;
+                shape.style.height = `${size}px`;
+                shape.style.left = `${left}px`;
+                shape.style.top = `${top}px`;
+
+                const colors = [
+                    'rgba(255, 85, 0, 0.7)', 
+                    'rgba(255, 100, 50, 0.7)', 
+                    'rgba(100, 150, 255, 0.7)', 
+                    'rgba(50, 100, 150, 0.7)', 
+                    'rgba(200, 100, 50, 0.7)'  
+                ];
+
+                const gradient = `radial-gradient(circle, ${colors[Math.floor(seededRandom(Date.now() + i) * colors.length)]} 0%, rgba(255, 255, 255, 0) 100%)`;
+                shape.style.background = gradient;
+
+                container.appendChild(shape);
+            }
+        }
+
+        generateArt();
+
+        window.addEventListener('resize', () => {
+            generateArt();
+        });
+
+        document.addEventListener('click', () => {
+            const shapes = document.querySelectorAll('.shape');
+            shapes.forEach((shape) => {
+                const hue = Math.random() * 60 + 100;
+                const saturation = Math.random() * 40 + 60;
+                const lightness = Math.random() * 30 + 40;
+                const alpha = 0.6;
+
+                shape.style.transition = 'background-color 1s ease';
+                shape.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+                shape.style.transform += ' scale(1.1)';
+
+                setTimeout(() => {
+                    shape.style.transform = shape.style.transform.replace(' scale(1.1)', '');
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
