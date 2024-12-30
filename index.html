@@ -116,7 +116,8 @@
             position: absolute;
             border-radius: 50%;
             mix-blend-mode: multiply;
-            transition: transform 4s ease-out, background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+            transition: transform 4s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
             animation: float 6s infinite alternate ease-in-out;
         }
 
@@ -125,7 +126,7 @@
                 transform: translate(0, 0);
             }
             100% {
-                transform: translate(20px, -20px);
+                transform: translate(25px, -25px); /* Slightly more subtle movement */
             }
         }
     </style>
@@ -180,7 +181,10 @@
                 shape.style.height = `${size}px`;
                 shape.style.left = `${left}px`;
                 shape.style.top = `${top}px`;
-                shape.style.backgroundColor = colors[Math.floor(seededRandom(seed + i) * colors.length)];
+
+                // Add a subtle gradient for a more dynamic look
+                const gradient = `radial-gradient(circle, rgba(255, 85, 0, 0.6) 0%, rgba(255, 150, 50, 0.6) 100%)`;
+                shape.style.background = gradient;
 
                 container.appendChild(shape);
             }
@@ -196,20 +200,4 @@
 
         document.addEventListener('click', () => {
             const shapes = document.querySelectorAll('.shape');
-            shapes.forEach((shape) => {
-                const hue = Math.random() * 60 + 15;
-                const saturation = Math.random() * 20 + 80;
-                const lightness = Math.random() * 20 + 50;
-                const alpha = 0.6;
-
-                shape.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
-                shape.style.transform += ' scale(1.1)';
-
-                setTimeout(() => {
-                    shape.style.transform = shape.style.transform.replace(' scale(1.1)', '');
-                }, 800);
-            });
-        });
-    </script>
-</body>
-</html>
+            shapes.for
