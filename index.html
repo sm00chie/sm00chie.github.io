@@ -116,7 +116,17 @@
             position: absolute;
             border-radius: 50%;
             mix-blend-mode: multiply;
-            transition: all 0.8s ease-out;
+            transition: transform 4s ease-out, background-color 0.3s ease;
+            animation: float 6s infinite alternate ease-in-out;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(20px, -20px);
+            }
         }
     </style>
 </head>
@@ -137,9 +147,6 @@
             const navContainer = container.querySelector('.nav-container');
             container.innerHTML = '';
             container.appendChild(navContainer);
-
-            const now = new Date();
-            const seed = now.getHours() + now.getMinutes() + now.getSeconds();
 
             const colors = [
                 'rgba(255, 85, 0, 0.6)',
@@ -177,28 +184,6 @@
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(generateArt, 250);
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (window.innerWidth > 768) {
-                const shapes = document.querySelectorAll('.shape');
-                const mouseX = e.clientX;
-                const mouseY = e.clientY;
-
-                shapes.forEach((shape, index) => {
-                    const rect = shape.getBoundingClientRect();
-                    const shapeX = rect.left + rect.width / 2;
-                    const shapeY = rect.top + rect.height / 2;
-
-                    const deltaX = mouseX - shapeX;
-                    const deltaY = mouseY - shapeY;
-
-                    const moveX = deltaX * 0.02 * (index + 1) / shapes.length;
-                    const moveY = deltaY * 0.02 * (index + 1) / shapes.length;
-
-                    shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
-                });
-            }
         });
 
         document.addEventListener('click', () => {
