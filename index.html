@@ -41,8 +41,8 @@
             padding: 1rem 2rem;
             z-index: 20;
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            justify-content: space-between;
+            align-items: center;
             border-bottom: 1px solid rgba(50, 20, 0, 0.1);
         }
 
@@ -52,7 +52,6 @@
             font-size: 1.25rem;
             letter-spacing: 0.1em;
             font-weight: 400;
-            margin-bottom: 1rem;
         }
 
         .nav {
@@ -81,6 +80,7 @@
             .brand {
                 font-size: 1.5rem;
                 font-weight: 600;
+                margin-bottom: 1rem;
             }
 
             .nav {
@@ -114,7 +114,7 @@
 <body>
     <div class="container" id="artContainer">
         <div class="nav-container">
-            <a href="/" class="brand">TW</a>
+            <a href="/" class="brand">Tyler Wallace</a>
             <nav class="nav">
                 <a href="/about">About me</a>
                 <a href="/posts">Posts</a>
@@ -139,38 +139,21 @@
                 'rgba(255, 125, 0, 0.6)'
             ];
 
-            const isMobile = window.innerWidth <= 768;
-
-            let baseSize;
-            if (isMobile) {
-                baseSize = Math.min(window.innerWidth * 1.5, window.innerHeight * 1.2);
-            } else {
-                const minDimension = Math.min(window.innerWidth, window.innerHeight);
-                baseSize = Math.min(400, minDimension * 0.4) + (seed % 100);
-            }
-
-            const numShapes = isMobile ? 2 : 3;
+            const baseSize = window.innerWidth * 0.7;
+            const numShapes = 3;
 
             for (let i = 0; i < numShapes; i++) {
                 const shape = document.createElement('div');
                 shape.className = 'shape';
 
-                const sizeMultiplier = isMobile ? (1.2 + (i * 0.3)) : (1 + (i * 0.3));
+                const sizeMultiplier = 1 + (i * 0.3);
                 const size = baseSize * sizeMultiplier;
 
-                const leftRange = window.innerWidth - (size * 0.5);
-                const topRange = window.innerHeight - (size * 0.5);
+                const leftRange = window.innerWidth - size;
+                const topRange = window.innerHeight - size;
 
-                let top;
-                if (isMobile) {
-                    const mobileTopMin = window.innerHeight * 0.3;
-                    const mobileTopMax = window.innerHeight * 0.6;
-                    top = mobileTopMin + ((seed * (i + 2)) % (mobileTopMax - mobileTopMin));
-                } else {
-                    top = (window.innerHeight / 3) + ((seed * (i + 2)) % (topRange / 1.5));
-                }
-
-                const left = Math.max(-size * 0.3, Math.min(leftRange, (seed * (i + 1)) % leftRange));
+                const left = Math.random() * leftRange - size * 0.5;
+                const top = Math.random() * topRange - size * 0.5;
 
                 shape.style.width = `${size}px`;
                 shape.style.height = `${size}px`;
