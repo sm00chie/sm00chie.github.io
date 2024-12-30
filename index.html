@@ -54,6 +54,63 @@
             font-weight: 400;
         }
 
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: rgba(50, 20, 0, 0.9);
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+            font-weight: 400;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: rgba(50, 20, 0, 0.9);
+            left: 0;
+            bottom: -4px;
+            transition: width 0.3s ease;
+        }
+
+        .nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 0.75rem 1rem;
+                align-items: flex-start;
+            }
+
+            .brand {
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin-bottom: 1rem;
+            }
+
+            .nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .nav a {
+                font-size: 1.1rem;
+                font-weight: 500;
+                padding: 0.5rem 1rem;
+            }
+        }
+
         .shape {
             position: absolute;
             border-radius: 50%;
@@ -81,6 +138,7 @@
             <nav class="nav">
                 <a href="/about">About me</a>
                 <a href="/posts">Posts</a>
+                <a href="/contact">Contact</a> <!-- Added third link -->
             </nav>
         </div>
     </div>
@@ -101,14 +159,14 @@
             const seed = now % 10000;
 
             const colors = [
-                'rgba(203, 184, 219, 0.6)', // Soft lavender
-                'rgba(180, 233, 235, 0.6)', // Light teal
-                'rgba(237, 227, 204, 0.6)', // Pale yellow
-                'rgba(227, 224, 255, 0.5)', // Soft blue
-                'rgba(255, 200, 180, 0.6)'  // Warm pinkish tone
+                'rgba(255, 85, 0, 0.7)', // Rich orange
+                'rgba(255, 100, 50, 0.7)', // Warm coral
+                'rgba(100, 150, 255, 0.7)', // Soft blue
+                'rgba(50, 100, 150, 0.7)', // Muted teal
+                'rgba(200, 100, 50, 0.7)'  // Earthy brownish tone
             ];
 
-            const numShapes = 3 + Math.floor(seededRandom(seed) * 4); // Generate between 3 and 6 shapes
+            const numShapes = 3 + Math.floor(seededRandom(seed) * 3); // Limit to 3 to 5 shapes
 
             for (let i = 0; i < numShapes; i++) {
                 const shape = document.createElement('div');
@@ -125,7 +183,7 @@
                 shape.style.left = `${left}px`;
                 shape.style.top = `${top}px`;
 
-                // Soft pastel gradients to match Turrell's light aesthetics
+                // Richer colors with more visibility
                 const gradient = `radial-gradient(circle, ${colors[Math.floor(seededRandom(seed + i) * colors.length)]} 0%, rgba(255, 255, 255, 0) 100%)`;
                 shape.style.background = gradient;
 
@@ -144,11 +202,10 @@
         document.addEventListener('click', () => {
             const shapes = document.querySelectorAll('.shape');
             shapes.forEach((shape) => {
-                // Smoothly transition between subtle color shifts, inspired by light color shifts in Turrell's works
-                const hue = Math.random() * 40 + 180;
-                const saturation = Math.random() * 30 + 50;
-                const lightness = Math.random() * 30 + 60;
-                const alpha = 0.5;
+                const hue = Math.random() * 60 + 100;
+                const saturation = Math.random() * 40 + 60;
+                const lightness = Math.random() * 30 + 40;
+                const alpha = 0.6;
 
                 shape.style.transition = 'background-color 1s ease';
                 shape.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
