@@ -75,44 +75,92 @@ main {
     color: rgba(80, 80, 80, 1); /* Slightly lighter on hover */
 }
 
+/* Navigation Container */
+.nav-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(245, 245, 245, 0.9);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    border-bottom: 1px solid rgba(200, 200, 200, 0.6);
+}
+
+/* Brand Link */
+.brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: rgba(50, 50, 50, 1);
+}
+
 /* Navigation Links */
 .nav {
     display: flex;
-    gap: 1.5rem; /* Space between links */
-}
-
-.nav a {
-    font-size: 1rem;
-    text-decoration: none;
-    color: rgba(50, 50, 50, 0.9); /* Darker text color */
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.nav a:hover {
-    color: rgba(80, 80, 80, 1); /* Slightly lighter on hover */
-    transform: translateY(-2px); /* Subtle lift effect */
+    gap: 1.5rem;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-    .nav-container {
-        padding: 0.8rem 1.5rem;
+    .nav {
+        display: none; /* Hide navigation links on mobile */
+        flex-direction: column; /* Stack links vertically */
+        position: absolute;
+        top: 60px; /* Adjust to show below navbar */
+        right: 0;
+        background: rgba(245, 245, 245, 0.9); /* Background for dropdown */
+        padding: 1rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 200px;
     }
 
-    .brand {
-        font-size: 1.2rem;
+    .nav.open {
+        display: flex; /* Show navigation links when hamburger is clicked */
     }
 
-    .nav a {
-        font-size: 0.9rem;
+    .hamburger {
+        display: block; /* Make hamburger visible */
+        cursor: pointer;
+        z-index: 200;
+    }
+
+    .hamburger div {
+        width: 30px;
+        height: 4px;
+        background-color: #333;
+        margin: 5px 0;
+        transition: transform 0.3s ease;
     }
 }
 
-/* Highlight active link */
-.nav a.active {
-    color: rgba(0, 100, 200, 1); /* Bright blue to indicate active page */
-    font-weight: bold;
-    border-bottom: 2px solid rgba(0, 100, 200, 1);
+/* Hamburger Icon - position it at the top right */
+.hamburger {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 24px;
+    width: 30px;
+}
+
+/* Add an active class for animations when the menu is open */
+.hamburger.open div:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.open div:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open div:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
 }
 
 /* Post List Styling */
