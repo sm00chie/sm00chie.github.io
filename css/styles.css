@@ -5,25 +5,6 @@ body {
     background: #F5F5F5;
 }
 
-.nav-container {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: rgba(245, 245, 245, 0.7);
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    z-index: 100;
-    border-bottom: 1px solid rgba(50, 20, 0, 0.1);
-}
-
-.nav a {
-    color: rgba(50, 20, 0, 0.9);
-    text-decoration: none;
-    margin-right: 1rem;
-}
-
 main {
     padding: 6rem 2rem;
     max-width: 800px;
@@ -63,4 +44,66 @@ main {
 .about-section a:hover {
     color: rgba(255, 85, 0, 0.9);
     border-bottom: 1px solid rgba(255, 85, 0, 0.9);
+}
+
+/* Navigation Container */
+.nav-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(245, 245, 245, 0.9); /* Light transparent background */
+    backdrop-filter: blur(8px); /* Subtle blur effect */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    z-index: 100;
+    border-bottom: 1px solid rgba(200, 200, 200, 0.6); /* Soft border */
+}
+
+/* Brand Link */
+.brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: rgba(50, 50, 50, 1); /* Dark text color */
+    transition: color 0.3s ease;
+}
+
+.brand:hover {
+    color: rgba(80, 80, 80, 1); /* Slightly lighter on hover */
+}
+
+/* Navigation Links */
+.nav {
+    display: flex;
+    gap: 1.5rem; /* Space between links */
+}
+
+.nav a {
+    font-size: 1rem;
+    text-decoration: none;
+    color: rgba(50, 50, 50, 0.9); /* Darker text color */
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.nav a:hover {
+    color: rgba(80, 80, 80, 1); /* Slightly lighter on hover */
+    transform: translateY(-2px); /* Subtle lift effect */
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 0.8rem 1.5rem;
+    }
+
+    .brand {
+        font-size: 1.2rem;
+    }
+
+    .nav a {
+        font-size: 0.9rem;
+    }
 }
