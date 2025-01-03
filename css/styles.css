@@ -51,24 +51,24 @@ main {
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(245, 245, 245, 0.9); /* Light transparent background */
-    backdrop-filter: blur(8px); /* Subtle blur effect */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    background: rgba(245, 245, 245, 0.7);
+    backdrop-filter: blur(8px);
     padding: 1rem 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    z-index: 100;
-    border-bottom: 1px solid rgba(200, 200, 200, 0.6); /* Soft border */
+    z-index: 20;
+    display: flex;
+    justify-content: space-between; /* Align items left and right */
+    align-items: center;
+    border-bottom: 1px solid rgba(50, 20, 0, 0.1);
 }
+
 
 /* Brand Link */
 .brand {
-    font-size: 1.5rem;
-    font-weight: bold;
+    color: rgba(50, 20, 0, 0.9);
     text-decoration: none;
-    color: rgba(50, 50, 50, 1); /* Dark text color */
-    transition: color 0.3s ease;
+    font-size: 1.25rem;
+    letter-spacing: 0.1em;
+    font-weight: 400;
 }
 
 .brand:hover {
@@ -102,39 +102,32 @@ main {
 /* Navigation Links */
 .nav {
     display: flex;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
-/* Mobile Responsiveness */
+
+/* Mobile responsiveness */
 @media (max-width: 768px) {
-    .nav {
-        display: none; /* Hide navigation links on mobile */
-        flex-direction: column; /* Stack links vertically */
-        position: absolute;
-        top: 60px; /* Adjust to show below navbar */
-        right: 0;
-        background: rgba(245, 245, 245, 0.9); /* Background for dropdown */
+    .nav-container {
+        flex-direction: row; /* Stay in row on mobile */
+        align-items: center;
+        justify-content: space-between; /* Ensure items are spaced out */
         padding: 1rem;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: 200px;
+    }
+
+    .nav {
+        display: none;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
     }
 
     .nav.open {
-        display: flex; /* Show navigation links when hamburger is clicked */
+        display: flex;
     }
 
-    .hamburger {
-        display: block; /* Make hamburger visible */
-        cursor: pointer;
-        z-index: 200;
-    }
-
-    .hamburger div {
-        width: 30px;
-        height: 4px;
-        background-color: #333;
-        margin: 5px 0;
-        transition: transform 0.3s ease;
+    .hamburger-menu {
+        display: flex;
     }
 }
 
@@ -148,6 +141,20 @@ main {
     justify-content: space-between;
     height: 24px;
     width: 30px;
+}
+
+/* Hamburger Menu */
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.hamburger-menu div {
+    width: 25px;
+    height: 3px;
+    background-color: rgba(50, 20, 0, 0.9);
 }
 
 /* Add an active class for animations when the menu is open */
