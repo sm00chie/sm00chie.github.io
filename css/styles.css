@@ -54,9 +54,9 @@ main {
     background: rgba(245, 245, 245, 0.7);
     backdrop-filter: blur(8px);
     padding: 1rem 2rem;
-    z-index: 20;
+    z-index: 100;
     display: flex;
-    justify-content: space-between; /* Align items left and right */
+    justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid rgba(50, 20, 0, 0.1);
 }
@@ -75,22 +75,6 @@ main {
     color: rgba(80, 80, 80, 1); /* Slightly lighter on hover */
 }
 
-/* Navigation Container */
-.nav-container {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: rgba(245, 245, 245, 0.9);
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-    border-bottom: 1px solid rgba(200, 200, 200, 0.6);
-}
-
 /* Brand Link */
 .brand {
     font-size: 1.5rem;
@@ -103,32 +87,6 @@ main {
 .nav {
     display: flex;
     gap: 2rem;
-}
-
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-    .nav-container {
-        flex-direction: row; /* Stay in row on mobile */
-        align-items: center;
-        justify-content: space-between; /* Ensure items are spaced out */
-        padding: 1rem;
-    }
-
-    .nav {
-        display: none;
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
-    }
-
-    .nav.open {
-        display: flex;
-    }
-
-    .hamburger-menu {
-        display: flex;
-    }
 }
 
 /* Hamburger Icon - position it at the top right */
@@ -145,7 +103,7 @@ main {
 
 /* Hamburger Menu */
 .hamburger-menu {
-    display: none;
+    display: none;  /* Hidden by default on large screens */
     flex-direction: column;
     gap: 5px;
     cursor: pointer;
@@ -168,6 +126,31 @@ main {
 
 .hamburger.open div:nth-child(3) {
     transform: rotate(-45deg) translate(5px, -5px);
+}
+
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav {
+        display: none;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .nav.open {
+        display: flex; /* Show nav when open */
+    }
+
+    .hamburger-menu {
+        display: flex;  /* Show hamburger menu on mobile */
+    }
 }
 
 /* Post List Styling */
