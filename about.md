@@ -16,17 +16,24 @@
     </div>
 
     <main>
-        
-# Greetings 👋
-
-I'm a co-founder of [vaults.fyi](https://vaults.fyi/), where we're working to bring transparent, permissionless web3 financial applications to the masses.
-
-Read out some of my writings [here](/posts/) and find my analytics work at [Dune](https://dune.com/tt_tyler).
-
-I like to surf, make espresso, and study history. I studied Engineering Science and Economics in undergrad. In my youth, I raced go karts competitively and was a Latin nerd.
-
-Get in touch with me via DM on [Twitter/X](https://x.com/0x7477/).
-
+        <section class="about-section">
+            <h1>Greetings 👋</h1>
+            <p>
+                I'm a co-founder of <a href="https://vaults.fyi/" target="_blank">vaults.fyi</a>, where we're working to bring transparent, permissionless web3 financial applications to the masses.
+            </p>
+            <p>
+                Read some of my writings <a href="/posts/">here</a> and find my analytics work at <a href="https://dune.com/tt_tyler" target="_blank">Dune</a>.
+            </p>
+            <p>
+                I like to surf, make espresso, and study history. I studied Engineering Science and Economics in undergrad.
+            </p>
+            <p>
+                In my youth, I raced go karts competitively and was a Latin nerd.
+            </p>
+            <p>
+                Get in touch with me via DM on <a href="https://x.com/0x7477/" target="_blank">Twitter/X</a>.
+            </p>
+        </section>
     </main>
 
     <script src="js/scripts.js"></script>
