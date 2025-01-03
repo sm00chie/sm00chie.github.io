@@ -1,11 +1,19 @@
 /* General styles */
+
+/* Default scrollable behavior */
 html, body {
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Prevent scrolling */
+    height: auto; /* Allow content height to define page height */
+    overflow: auto; /* Enable scrolling by default */
+    position: static; /* Default positioning */
+}
+
+/* Non-scrollable styles for index.html */
+.no-scroll {
     height: 100%;
-    width: 100%;
-    position: fixed;
+    overflow: hidden; /* Prevent scrolling */
+    position: fixed; /* Fix content in place */
 }
 
 body {
