@@ -29,3 +29,38 @@ main {
     max-width: 800px;
     margin: auto;
 }
+
+.about-section {
+    max-width: 800px;
+    margin: 6rem auto 2rem;
+    padding: 2rem;
+    background: rgba(245, 245, 245, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.about-section h1 {
+    font-size: 2rem;
+    color: rgba(50, 20, 0, 0.9);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.about-section p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: rgba(50, 20, 0, 0.8);
+    margin-bottom: 1rem;
+}
+
+.about-section a {
+    color: rgba(50, 20, 0, 0.9);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(50, 20, 0, 0.3);
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.about-section a:hover {
+    color: rgba(255, 85, 0, 0.9);
+    border-bottom: 1px solid rgba(255, 85, 0, 0.9);
+}
