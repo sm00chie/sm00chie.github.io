@@ -1,0 +1,31 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #F5F5F5;
+}
+
+.nav-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(245, 245, 245, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    z-index: 100;
+    border-bottom: 1px solid rgba(50, 20, 0, 0.1);
+}
+
+.nav a {
+    color: rgba(50, 20, 0, 0.9);
+    text-decoration: none;
+    margin-right: 1rem;
+}
+
+main {
+    padding: 6rem 2rem;
+    max-width: 800px;
+    margin: auto;
+}
