@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -7,13 +6,7 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="nav-container">
-        <a href="/" class="brand">Tyler Wallace</a>
-        <nav class="nav">
-            <a href="/about.html">About me</a>
-            <a href="/posts.html">Posts</a>
-        </nav>
-    </div>
+    <div id="nav-placeholder"></div>
 
     <main>
         <section class="about-section">
@@ -37,5 +30,14 @@
     </main>
 
     <script src="js/scripts.js"></script>
+    <script>
+        // Load the navigation bar dynamically
+        fetch('/nav.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('nav-placeholder').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading navigation:', error));
+    </script>
 </body>
 </html>
