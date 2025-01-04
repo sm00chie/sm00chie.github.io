@@ -147,6 +147,10 @@ body {
 
     .nav.open {
         display: flex;
+    }
+
+    .nav a {
+        display: flex;
         justify-content: center;
     }
 
