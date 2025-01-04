@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html>
 <html class="no-scroll">
 <head>
     <meta charset="UTF-8">
@@ -7,12 +6,14 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/inter/3.19.3/inter.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23FF5500'/></svg>">
+    <title>Home</title>
 </head>
 <body>
-    
-    <div class="container" id="artContainer">
-        <div id="nav-placeholder"></div> <!-- Placeholder for navigation -->    
-    </div>
+    <!-- Navigation Placeholder -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Art Container -->
+    <div class="container" id="artContainer"></div>
 
     <script>
         function seededRandom(seed) {
@@ -22,9 +23,7 @@
 
         function generateArt() {
             const container = document.getElementById('artContainer');
-            const navContainer = container.querySelector('.nav-placeholder');
-            container.innerHTML = '';
-            container.appendChild(navContainer);
+            container.innerHTML = ''; // Clear existing shapes
 
             const now = Date.now();
             const seed = now % 10000;
@@ -43,7 +42,7 @@
                 const shape = document.createElement('div');
                 shape.className = 'shape';
 
-                const sizeMultiplier = 0.32 + seededRandom(seed + i) * 0.4; // ~20% smaller
+                const sizeMultiplier = 0.32 + seededRandom(seed + i) * 0.4;
                 const size = window.innerWidth * sizeMultiplier;
 
                 const left = seededRandom(seed + i * 2) * (window.innerWidth - size);
@@ -67,24 +66,6 @@
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(generateArt, 250);
-        });
-
-        document.addEventListener('click', () => {
-            const shapes = document.querySelectorAll('.shape');
-            shapes.forEach((shape) => {
-                const hue = Math.random() * 60 + 100;
-                const saturation = Math.random() * 40 + 60;
-                const lightness = Math.random() * 30 + 40;
-                const alpha = 0.6;
-
-                shape.style.transition = 'background-color 1s ease';
-                shape.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
-                shape.style.transform += ' scale(1.1)';
-
-                setTimeout(() => {
-                    shape.style.transform = shape.style.transform.replace(' scale(1.1)', '');
-                }, 1000);
-            });
         });
     </script>
 
