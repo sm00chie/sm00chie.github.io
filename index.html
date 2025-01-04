@@ -96,35 +96,8 @@
                 }, 1000);
             });
         });
-        
-        // JavaScript to dynamically load the navigation
-        document.addEventListener('DOMContentLoaded', () => {
-            fetch('/nav.html')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to load nav.html');
-                    }
-                    return response.text();
-                })
-                .then(html => {
-                    document.getElementById('nav-placeholder').innerHTML = html;
-
-                    // Ensure the hamburger menu functionality works
-                    const hamburger = document.querySelector('.hamburger-menu');
-                    if (hamburger) {
-                        hamburger.addEventListener('click', () => {
-                            const nav = document.querySelector('.nav');
-                            if (nav) {
-                                nav.classList.toggle('open');
-                            }
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading navigation:', error);
-                });
-        });
     </script>
 
+    <script src="js/scripts.js"></script>
 </body>
 </html>
