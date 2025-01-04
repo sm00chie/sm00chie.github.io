@@ -18,7 +18,6 @@ html, body {
 body {
     display: flex;
     justify-content: center;
-    align-items: center;
     background: #F5F5F5; /* Soft, neutral background */
     font-family: 'Inter', sans-serif;
 }
@@ -185,7 +184,7 @@ body {
 }
 
 .about-section {
-    margin-top: 100px; /* Space below the fixed navigation */
+    margin-top: 30px; /* Space below the fixed navigation */
     padding: 20px; /* Ensure content is not right against the edge */
     max-width: 800px; /* Optional: Limit content width for readability */
     margin-left: auto;
@@ -197,7 +196,7 @@ body {
 }
 
 .posts-section {
-    margin-top: 100px; /* Space below the fixed navigation */
+    margin-top: 30px; /* Space below the fixed navigation */
     padding: 20px; /* Ensure content is not right against the edge */
     max-width: 800px; /* Optional: Limit content width for readability */
     margin-left: auto;
