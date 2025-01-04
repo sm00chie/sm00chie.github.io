@@ -42,7 +42,7 @@ body {
     display: flex;
     justify-content: space-between; /* Space between brand and links */
     align-items: center;
-    padding: 0 20px; /* Add horizontal padding */
+    padding: 1rem 2rem;
     background-color: #ffffff;
     background: rgba(245, 245, 245, 0.9); /* Slightly transparent background */
     z-index: 10;
@@ -126,7 +126,7 @@ body {
     position: relative;
     margin-right: 10px; /* Add spacing from the right edge */
     margin-left: auto; /* Push it to the far right */
-    display: flex;
+    display: none;
     align-items: center; /* Vertically center the menu */
 }
 
