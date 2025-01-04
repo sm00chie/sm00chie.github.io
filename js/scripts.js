@@ -29,4 +29,20 @@ if (window.location.pathname === '/' || window.location.pathname === '/index.htm
 
 // Dynamically adjust navigation bar on window resize
 window.addEventListener('resize', () => {
-    const nav = document.querySelector('
+    const nav = document.querySelector('.nav');
+    if (nav && window.innerWidth > 768) {
+        nav.classList.remove('open'); // Ensure nav is closed on desktop
+    }
+});
+
+// Handle active link highlighting (optional, but useful for UX)
+document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname;
+    const links = document.querySelectorAll('.nav a');
+
+    links.forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+            link.classList.add('active');
+        }
+    });
+});
