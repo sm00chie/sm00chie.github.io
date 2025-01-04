@@ -142,10 +142,12 @@ body {
         display: none;
         flex-direction: column;
         gap: 1rem;
+        padding: 0.9rem 0rem;
     }
 
     .nav.open {
         display: flex;
+        justify-content: center;
     }
 
     .hamburger-menu {
