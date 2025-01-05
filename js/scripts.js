@@ -71,7 +71,7 @@ function generateArt() {
         'rgba(200, 100, 50, 0.7)'
     ];
 
-    const numShapes = 5 + Math.floor(seededRandom(seed) * 5);
+    const numShapes = 3 + Math.floor(seededRandom(seed) * 5);
 
     for (let i = 0; i < numShapes; i++) {
         const shape = document.createElement('div');
@@ -93,32 +93,50 @@ function generateArt() {
     }
 }
 
-// Function for color changes on click
-document.addEventListener('click', () => {
+// Function for subtle color changes
+document.addEventListener('click', (event) => {
+    // Exclude clicks on the navbar
+    if (event.target.closest('nav')) return;
+
     const shapes = document.querySelectorAll('.shape');
     shapes.forEach((shape) => {
-        const hue = Math.random() * 360; // Random hue
-        const saturation = Math.random() * 50 + 50; // 50% - 100% saturation
-        const lightness = Math.random() * 30 + 40; // 40% - 70% lightness
-        const alpha = 0.7;
+        const currentColor = getComputedStyle(shape).backgroundImage;
 
-        shape.style.transition = 'background-color 0.5s ease';
-        shape.style.background = `radial-gradient(circle, hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha}) 0%, rgba(255, 255, 255, 0) 100%)`;
+        // Subtle adjustments to hue and lightness
+        const hueAdjustment = Math.random() * 15 - 7.5; // -7.5 to +7.5
+        const lightnessAdjustment = Math.random() * 10 - 5; // -5 to +5
+
+        const newColor = currentColor.replace(
+            /hsla\((\d+), (\d+)%, (\d+)%, ([\d.]+)\)/,
+            (match, hue, saturation, lightness, alpha) => {
+                const newHue = Math.max(0, Math.min(360, parseFloat(hue) + hueAdjustment));
+                const newLightness = Math.max(20, Math.min(80, parseFloat(lightness) + lightnessAdjustment));
+                return `hsla(${newHue}, ${saturation}%, ${newLightness}%, ${alpha})`;
+            }
+        );
+
+        shape.style.transition = 'background-color 1s ease';
+        shape.style.background = newColor;
     });
 });
 
-// Function for mouse movement animations
-document.addEventListener('mousemove', (event) => {
-    const shapes = document.querySelectorAll('.shape');
-    shapes.forEach((shape) => {
-        const rect = shape.getBoundingClientRect();
-        const dx = (event.clientX - (rect.left + rect.width / 2)) * 0.01;
-        const dy = (event.clientY - (rect.top + rect.height / 2)) * 0.01;
 
-        shape.style.transform = `translate(${dx}px, ${dy}px)`;
+// Function for subtle movement animations
+function animateShapes() {
+    const shapes = document.querySelectorAll('.shape');
+    shapes.forEach((shape, index) => {
+        const offsetX = Math.sin(Date.now() / 1000 + index) * 5; // Horizontal oscillation
+        const offsetY = Math.cos(Date.now() / 1000 + index) * 5; // Vertical oscillation
+
+        shape.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
     });
-});
+
+    requestAnimationFrame(animateShapes);
+}
 
 // Generate art initially and on window resize
 window.addEventListener('resize', generateArt);
 generateArt();
+
+// Start the animation loop
+animateShapes();
