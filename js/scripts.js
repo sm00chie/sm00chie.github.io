@@ -103,8 +103,8 @@ document.addEventListener('click', (event) => {
         const currentColor = getComputedStyle(shape).backgroundImage;
 
         // Subtle adjustments to hue and lightness
-        const hueAdjustment = Math.random() * 15 - 7.5; // -7.5 to +7.5
-        const lightnessAdjustment = Math.random() * 10 - 5; // -5 to +5
+        const hueAdjustment = Math.random() * 30 - 15; // -15 to +15
+        const lightnessAdjustment = Math.random() * 30 - 15; // -15 to +15
 
         const newColor = currentColor.replace(
             /hsla\((\d+), (\d+)%, (\d+)%, ([\d.]+)\)/,
@@ -125,8 +125,8 @@ document.addEventListener('click', (event) => {
 function animateShapes() {
     const shapes = document.querySelectorAll('.shape');
     shapes.forEach((shape, index) => {
-        const offsetX = Math.sin(Date.now() / 1000 + index) * 5; // Horizontal oscillation
-        const offsetY = Math.cos(Date.now() / 1000 + index) * 5; // Vertical oscillation
+        const offsetX = Math.sin(Date.now() / 1000 + index) * 15; // Horizontal oscillation
+        const offsetY = Math.cos(Date.now() / 1000 + index) * 15; // Vertical oscillation
 
         shape.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
     });
