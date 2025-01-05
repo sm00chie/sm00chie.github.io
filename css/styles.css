@@ -189,26 +189,48 @@ body {
     }
 }
 
-.about-section {
-    margin-top: 30px; /* Space below the fixed navigation */
-    padding: 20px; /* Ensure content is not right against the edge */
-    max-width: 800px; /* Optional: Limit content width for readability */
-    margin-left: auto;
-    margin-right: auto;
+.art-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
 }
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.page-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 0;
+}
+
+
+.posts-section h1 {
+    margin-bottom: 20px; /* Space below heading */
+}
+
 
 .about-section h1 {
     margin-bottom: 20px; /* Space below heading */
 }
 
-.posts-section {
-    margin-top: 30px; /* Space below the fixed navigation */
-    padding: 20px; /* Ensure content is not right against the edge */
-    max-width: 800px; /* Optional: Limit content width for readability */
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.posts-section h1 {
-    margin-bottom: 20px; /* Space below heading */
+.about-section, .posts-section {
+    position: relative;
+    z-index: 1; /* Ensure content stays above the overlay */
+    background-color: rgba(255, 255, 255, 0.85); /* Optional: Add a subtle background to content */
+    padding: 20px;
+    margin: 100px auto 20px; /* Adjust margins */
+    max-width: 800px;
+    border-radius: 8px; /* Optional: Add rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for depth */
 }
