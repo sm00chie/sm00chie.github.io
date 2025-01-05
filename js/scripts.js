@@ -71,7 +71,7 @@ function generateArt() {
         'rgba(200, 100, 50, 0.7)'
     ];
 
-    const numShapes = 3 + Math.floor(seededRandom(seed) * 5);
+    const numShapes = 3 + Math.floor(seededRandom(seed) * 3);
 
     for (let i = 0; i < numShapes; i++) {
         const shape = document.createElement('div');
