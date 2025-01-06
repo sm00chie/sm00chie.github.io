@@ -81,8 +81,8 @@ function generateArt() {
         const size = window.innerWidth * sizeMultiplier;
         
         // const size = Math.random() * 200 + 100; // Random size between 100px and 300px
-        const left = Math.random() * (window.innerWidth); //  (window.innerWidth - size) if want to keep within bounds
-        const top = Math.random() * (window.innerHeight); //  (window.innerWidth - size) if want to keep within bounds
+        const left = Math.random() * (window.innerWidth - size/3); //  (window.innerWidth - size) if want to keep within bounds
+        const top = Math.random() * (window.innerHeight - size/3); //  (window.innerWidth - size) if want to keep within bounds
 
         shape.style.width = `${size}px`;
         shape.style.height = `${size}px`;
@@ -103,26 +103,33 @@ document.addEventListener('click', (event) => {
 
     const shapes = document.querySelectorAll('.shape');
     shapes.forEach((shape) => {
-        const currentColor = getComputedStyle(shape).backgroundImage;
+        const currentGradient = getComputedStyle(shape).backgroundImage;
+        const gradientMatch = /radial-gradient\(circle, (.+?) 0%, .+?\)/.exec(currentGradient);
 
-        // Subtle adjustments to hue and lightness
-        const hueAdjustment = Math.random() * 80 - 40; // -40 to +40
-        const lightnessAdjustment = Math.random() * 80 - 40; // -40 to +40
+        if (gradientMatch) {
+            const currentInnerColor = gradientMatch[1]; // Extract the inner color
+            console.log("Current Inner Color:", currentInnerColor); // Log for debugging
 
-        const newColor = currentColor.replace(
-            /hsla\((\d+), (\d+)%, (\d+)%, ([\d.]+)\)/,
-            (match, hue, saturation, lightness, alpha) => {
-                const newHue = Math.max(0, Math.min(360, parseFloat(hue) + hueAdjustment));
-                const newLightness = Math.max(20, Math.min(80, parseFloat(lightness) + lightnessAdjustment));
-                return `hsla(${newHue}, ${saturation}%, ${newLightness}%, ${alpha})`;
-            }
-        );
+            // Subtle adjustments to hue, saturation, and lightness
+            const hue = Math.random() * 60 + 180; // 180-240
+            const saturation = Math.random() * 20 + 40; // 40-60%
+            const lightness = Math.random() * 20 + 40; // 40-60%
+            const alpha = 0.7;
 
-        shape.style.transition = 'background-color 1s ease';
-        shape.style.background = newColor;
+            const newColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+            const newGradient = `radial-gradient(circle, ${newColor} 0%, rgba(255, 255, 255, 0) 100%)`;
+
+            shape.style.transition = 'background-color 1s ease, transform 0.5s ease';
+            shape.style.backgroundImage = newGradient;
+
+            // Add a slight scaling effect to reinforce interaction feedback
+            shape.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                shape.style.transform = 'scale(1)';
+            }, 500);
+        }
     });
 });
-
 
 // Function for subtle movement animations
 function animateShapes() {
