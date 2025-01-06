@@ -12,62 +12,8 @@
     <!-- Navigation Placeholder -->
     <div id="nav-placeholder"></div>
 
-    <!-- Art Container -->
-    <div class="container" id="artContainer"></div>
-
-    <script>
-        function seededRandom(seed) {
-            const x = Math.sin(seed++) * 10000;
-            return x - Math.floor(x);
-        }
-
-        function generateArt() {
-            const container = document.getElementById('artContainer');
-            container.innerHTML = ''; // Clear existing shapes
-
-            const now = Date.now();
-            const seed = now % 10000;
-
-            const colors = [
-                'rgba(255, 85, 0, 0.7)',
-                'rgba(255, 100, 50, 0.7)',
-                'rgba(100, 150, 255, 0.7)',
-                'rgba(50, 100, 150, 0.7)',
-                'rgba(200, 100, 50, 0.7)'
-            ];
-
-            const numShapes = 3 + Math.floor(seededRandom(seed) * 3);
-
-            for (let i = 0; i < numShapes; i++) {
-                const shape = document.createElement('div');
-                shape.className = 'shape';
-
-                const sizeMultiplier = 0.32 + seededRandom(seed + i) * 0.4;
-                const size = window.innerWidth * sizeMultiplier;
-
-                const left = seededRandom(seed + i * 2) * (window.innerWidth - size);
-                const top = seededRandom(seed + i * 3) * (window.innerHeight - size);
-
-                shape.style.width = `${size}px`;
-                shape.style.height = `${size}px`;
-                shape.style.left = `${left}px`;
-                shape.style.top = `${top}px`;
-
-                const gradient = `radial-gradient(circle, ${colors[Math.floor(seededRandom(seed + i) * colors.length)]} 0%, rgba(255, 255, 255, 0) 100%)`;
-                shape.style.background = gradient;
-
-                container.appendChild(shape);
-            }
-        }
-
-        generateArt();
-
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(generateArt, 250);
-        });
-    </script>
+    <!-- add generative art -->
+    <div class="art-background">
 
     <script src="js/scripts.js"></script>
 </body>
