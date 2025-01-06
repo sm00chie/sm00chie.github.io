@@ -119,7 +119,7 @@ document.addEventListener('click', (event) => {
             const newColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
             const newGradient = `radial-gradient(circle, ${newColor} 0%, rgba(255, 255, 255, 0) 100%)`;
 
-            shape.style.transition = 'background-color 1s ease, transform 0.5s ease';
+            shape.style.transition = 'background-color 5s ease, transform 3s ease';
             shape.style.backgroundImage = newGradient;
 
             // Add a slight scaling effect to reinforce interaction feedback
