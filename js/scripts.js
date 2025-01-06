@@ -71,13 +71,16 @@ function generateArt() {
         'rgba(200, 100, 50, 0.7)'
     ];
 
-    const numShapes = 3 + Math.floor(seededRandom(seed) * 3);
+    const numShapes = 2 + Math.floor(seededRandom(seed) * 3);
 
     for (let i = 0; i < numShapes; i++) {
         const shape = document.createElement('div');
         shape.className = 'shape';
 
-        const size = Math.random() * 200 + 100; // Random size between 100px and 300px
+        const sizeMultiplier = 0.2 + seededRandom(seed + i) * 0.5; // sizes proportional to the viewport width, from 20% to 70%
+        const size = window.innerWidth * sizeMultiplier;
+        
+        // const size = Math.random() * 200 + 100; // Random size between 100px and 300px
         const left = Math.random() * (window.innerWidth - size);
         const top = Math.random() * (window.innerHeight - size);
 
@@ -103,7 +106,7 @@ document.addEventListener('click', (event) => {
         const currentColor = getComputedStyle(shape).backgroundImage;
 
         // Subtle adjustments to hue and lightness
-        const hueAdjustment = Math.random() * 30 - 15; // -15 to +15
+        const hueAdjustment = Math.random() * 60 - 30; // -30 to +30
         const lightnessAdjustment = Math.random() * 30 - 15; // -15 to +15
 
         const newColor = currentColor.replace(
