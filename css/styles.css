@@ -238,7 +238,7 @@ body {
 a {
     color: rgba(30, 120, 200, 0.9); /* Modern blue */
     text-decoration: none;
-    border-bottom: 1px solid rgba(30, 120, 200, 0.4); /* Subtle underline */
+    /*border-bottom: 1px solid rgba(30, 120, 200, 0.4);*/ /* Subtle underline */
     transition: color 0.3s, border-color 0.3s;
 }
 a:hover {
@@ -259,13 +259,13 @@ h1 {
 
 p {
     font-family: 'Inter', sans-serif;
-    font-size: 1.125rem; /* Slightly larger for readability */
-    line-height: 1.75; /* Comfortable spacing */
+    font-size: 1.1rem; /* Slightly larger for readability */
+    line-height: 1.5; /* Comfortable spacing */
     color: rgba(50, 50, 50, 0.8); /* Neutral gray for elegance */
     margin-bottom: 1.25rem;
-    text-align: justify; /* Balanced appearance */
-    padding: 0 1rem; /* Slight padding for alignment with edges */
-    background-color: rgba(255, 255, 255, 0.6); /* Subtle backdrop for legibility */
-    border-radius: 8px; /* Rounded corners for a modern touch */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Soft shadow for dimension */
+    /* padding: 0 0.5rem;*/ /* Slight padding for alignment with edges */
+    /*text-align: justify;*/ /* Balanced appearance */
+    /* background-color: rgba(255, 255, 255, 0.6); */ /* Subtle backdrop for legibility */
+    /* border-radius: 8px; */ /* Rounded corners for a modern touch */
+    /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */ /* Soft shadow for dimension */
 }
