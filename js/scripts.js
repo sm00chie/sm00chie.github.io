@@ -120,7 +120,6 @@ document.addEventListener('click', (event) => {
             const newGradient = `radial-gradient(circle, ${newColor} 0%, rgba(255, 255, 255, 0) 100%)`;
 
             shape.style.transition = 'background-color 2s ease, transform 3s ease';
-            shape.style.backgroundImage = newGradient;
 
              // Update the background image with a delay to allow the transition to work
             requestAnimationFrame(() => {
