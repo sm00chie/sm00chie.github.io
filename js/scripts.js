@@ -140,3 +140,16 @@ generateArt();
 
 // Start the animation loop
 animateShapes();
+
+// Function to dynamically load metadata
+function loadMetadata() {
+    fetch('meta.html')
+        .then(response => response.text())
+        .then(data => {
+            document.head.innerHTML += data;
+        })
+        .catch(error => console.error('Error loading metadata:', error));
+}
+
+// Call the function to load metadata
+loadMetadata();
