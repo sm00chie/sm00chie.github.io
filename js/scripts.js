@@ -96,42 +96,28 @@ function generateArt() {
     }
 }
 
-// Function for subtle color changes
+
+// Function for subtle shape movement upon click
 document.addEventListener('click', (event) => {
     // Exclude clicks on the navbar
     if (event.target.closest('nav')) return;
 
     const shapes = document.querySelectorAll('.shape');
     shapes.forEach((shape) => {
-        const currentGradient = getComputedStyle(shape).backgroundImage;
-        const gradientMatch = /radial-gradient\(circle, (.+?) 0%, .+?\)/.exec(currentGradient);
+        const rect = shape.getBoundingClientRect();
 
-        if (gradientMatch) {
-            const currentInnerColor = gradientMatch[1]; // Extract the inner color
-            console.log("Current Inner Color:", currentInnerColor); // Log for debugging
+        // Calculate movement based on the click position
+        const distanceX = event.clientX - (rect.left + rect.width / 2);
+        const distanceY = event.clientY - (rect.top + rect.height / 2);
 
-            // Subtle adjustments to hue, saturation, and lightness
-            const hue = Math.random() * 60 + 180; // 180-240
-            const saturation = Math.random() * 20 + 40; // 40-60%
-            const lightness = Math.random() * 20 + 40; // 40-60%
-            const alpha = 0.7;
+        // Calculate target positions
+        const targetLeft = parseFloat(shape.style.left || '0') + distanceX * 0.1;
+        const targetTop = parseFloat(shape.style.top || '0') + distanceY * 0.1;
 
-            const newColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
-            const newGradient = `radial-gradient(circle, ${newColor} 0%, rgba(255, 255, 255, 0) 100%)`;
-
-            shape.style.transition = 'background-color 2s ease, transform 3s ease';
-
-             // Update the background image with a delay to allow the transition to work
-            requestAnimationFrame(() => {
-                shape.style.backgroundImage = newGradient;
-            });
-            
-            // Add a slight scaling effect to reinforce interaction feedback
-            shape.style.transform = 'scale(1.05)';
-            setTimeout(() => {
-                shape.style.transform = 'scale(1)';
-            }, 500);
-        }
+        // Apply gradual movement to the new position
+        shape.style.transition = 'left 3s ease, top 3s ease';
+        shape.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, targetLeft))}px`;
+        shape.style.top = `${Math.max(0, Math.min(window.innerHeight - rect.height, targetTop))}px`;
     });
 });
 
