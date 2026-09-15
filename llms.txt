@@ -1,0 +1,21 @@
+# Tyler Wallace
+
+> Tyler Wallace is a product builder and operator with experience across developer APIs, financial infrastructure, product strategy, and business operations.
+
+Tyler works at the intersection of product, operations, customers, and engineering. His experience includes building technical products, working directly with customers, translating customer needs into product priorities, and using data to guide execution.
+
+He co-founded Wallfacer Labs, the company behind vaults.fyi—developer APIs that power research and onchain products for teams including Kraken, Gauntlet, and KPK. The platform supported more than $35 million in AUM and processed more than $100 million in transaction volume. Previously, he worked on stablecoin and lending products at TrustToken and began his career in technology investment banking.
+
+Core strengths include product strategy and execution, business and product operations, technical customer work, APIs, SQL, data analysis, and lightweight scripting.
+
+He studied Engineering Science and Economics at Vanderbilt University.
+
+## Profiles and work
+
+- [Personal website](https://tylerw.fyi/): Current professional overview
+- [LinkedIn](https://www.linkedin.com/in/wtwallace/): Employment history and professional profile
+- [Projects](https://tylerw.fyi/projects.html): Selected products and prototypes
+- [Writing](https://tylerw.fyi/posts.html): Selected writing
+- [GitHub](https://github.com/sm00chie/): Public code and projects
+- [Dune Analytics](https://dune.com/tt_tyler): Public onchain data analysis
+- [X](https://x.com/0x7477): Public posts and interests
