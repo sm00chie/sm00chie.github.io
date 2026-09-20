@@ -59,11 +59,11 @@ async function loadConditions() {
     const h = hasSwell ? c.swell_wave_height : c.wave_height;
     const p = hasSwell ? c.swell_wave_period : c.wave_period;
     const d = hasSwell ? c.swell_wave_direction : c.wave_direction;
-    text('swellLabel',hasSwell ? 'Offshore swell' : 'Offshore waves');
+    text('swellLabel',hasSwell ? 'Swell' : 'Waves');
     if (finite(h) && h >= 0) {
       available++;
       text('swell',`${mToFt(h).toFixed(1)} ft`);
-      text('swellDetail',[finite(p) ? `${p.toFixed(0)}s mean period` : '',finite(d) ? `from ${degToCardinal(d)} ${Math.round(d)}°` : '',`Model ${localTime(c.time*1000)} PT`].filter(Boolean).join(' · '));
+      text('swellDetail',[finite(p) ? `${p.toFixed(0)}s mean period` : '',finite(d) ? `from ${degToCardinal(d)} ${Math.round(d)}°` : ''].filter(Boolean).join(' · '));
       signal('swellSignal',...swellCue(mToFt(h),p));
       document.getElementById('swellCompass').innerHTML = directionArrow(d);
     }
