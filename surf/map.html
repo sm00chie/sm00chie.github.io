@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SD Surf Cam Map</title>
+<style>
+:root{--bg:#07131a;--panel:#0d1d26;--text:#edf6f8;--muted:#94aeb8;--line:#203944;--accent:#7bd3d7;--water:#0a2734;--land:#17323a;--external:#83b9ff;--visual:#7fe0a5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}header{height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line)}h1{font-size:20px;margin:0}.back{color:var(--text);text-decoration:none;border:1px solid var(--line);background:#0b2029;padding:8px 10px;border-radius:9px;font-size:13px}.wrap{max-width:900px;margin:0 auto;padding:20px}.hint{color:var(--muted);font-size:13px;margin:0 0 12px}.map{position:relative;height:760px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:linear-gradient(90deg,var(--water) 0 42%,var(--land) 42% 100%)}.coast{position:absolute;left:39%;top:0;width:10%;height:100%;background:linear-gradient(90deg,transparent 0 35%,rgba(255,255,255,.13) 36% 39%,transparent 40%);transform:skewX(-3deg)}.oceanlabel{position:absolute;left:8%;top:44%;color:#75a8b8;font-size:13px;letter-spacing:.18em;text-transform:uppercase;transform:rotate(-90deg)}.citylabel{position:absolute;right:5%;top:3%;color:#6f9199;font-size:12px}.pin{position:absolute;left:42%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);z-index:2}.dot{width:15px;height:15px;border-radius:50%;background:var(--external);border:3px solid rgba(255,255,255,.85);box-shadow:0 0 0 4px rgba(131,185,255,.14);flex:none}.pin.visual .dot{background:var(--visual);box-shadow:0 0 0 4px rgba(127,224,165,.14)}.label{background:rgba(7,19,26,.93);border:1px solid var(--line);border-radius:9px;padding:6px 8px;white-space:nowrap;font-size:12px;box-shadow:0 6px 18px rgba(0,0,0,.2)}.pin:hover .label{border-color:#4c7482;background:#0b2029}.pin.left{flex-direction:row-reverse}.pin.left .label{text-align:right}.legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:12px}.legend span{display:flex;align-items:center;gap:7px}.legend .dot{width:10px;height:10px;border-width:2px;box-shadow:none}.section{margin-top:22px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}.row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 12px;border-top:1px solid var(--line)}.row:first-child{border-top:0}.row a{color:var(--text);text-decoration:none}.meta{color:var(--muted);font-size:12px}@media(max-width:650px){.wrap{padding:12px}.map{height:720px}.pin{left:40%}.label{font-size:11px;max-width:180px;white-space:normal}.pin.left{flex-direction:row}.pin.left .label{text-align:left}.row{align-items:flex-start;flex-direction:column;gap:3px}}
+</style>
+</head>
+<body>
+<header><h1>SD Surf Cam Map</h1><a class="back" href="./">← Dashboard</a></header>
+<div class="wrap">
+<p class="hint">Click any pin to open that camera. Positions are approximate and arranged north-to-south along the coast.</p>
+<div class="map">
+<div class="coast"></div><div class="oceanlabel">Pacific Ocean</div><div class="citylabel">San Diego County coast</div>
+<a class="pin left" style="top:7%" href="https://hdontap.com/stream/155380/" target="_blank" rel="noopener"><span class="dot"></span><span class="label">Carlsbad Beach</span></a>
+<a class="pin" style="top:14%" href="https://hdontap.com/stream/177276/" target="_blank" rel="noopener"><span class="dot"></span><span class="label">Terramar Point</span></a>
+<a class="pin visual left" style="top:28%" href="https://www.skylinewebcams.com/en/webcam/united-states/california/encinitas/encinitas-california.html" target="_blank" rel="noopener"><span class="dot"></span><span class="label">Moonlight / Encinitas</span></a>
+<a class="pin" style="top:36%" href="https://www.hansensurf.com/pages/live-surf-cams-cardiff-reef-san-diego" target="_blank" rel="noopener"><span class="dot"></span><span class="label">Cardiff Reef</span></a>
+<a class="pin left" style="top:45%" href="https://www.hansensurf.com/pages/live-surf-cams-cardiff-reef-san-diego" target="_blank" rel="noopener"><span class="dot"></span><span class="label">Del Mar North / Dog Beach</span></a>
+<a class="pin" style="top:51%" href="https://hdontap.com/stream/145884/" target="_blank" rel="noopener"><span class="dot"></span><span class="label">Del Mar Overlook</span></a>
+<a class="pin left" style="top:55%" href="https://hdontap.com/stream/203562/" target="_blank" rel="noopener"><span class="dot"></span><span class="label">17th St. Del Mar NW</span></a>
+<a class="pin" style="top:59%" href="https://hdontap.com/stream/122912/" target="_blank" rel="noopener"><span class="dot"></span><span class="label">17th St. Del Mar SW</span></a>
+<a class="pin left" style="top:71%" href="https://scripps.ucsd.edu/piercam" target="_blank" rel="noopener"><span class="dot"></span><span class="label">Scripps Pier</span></a>
+<a class="pin visual" style="top:76%" href="https://www.ljshoreshotel.com/beach-cam/" target="_blank" rel="noopener"><span class="dot"></span><span class="label">La Jolla Shores</span></a>
+<a class="pin left" style="top:89%" href="https://www.pacificterrace.com/pacific-beach-webcam/" target="_blank" rel="noopener"><span class="dot"></span><span class="label">Pacific Beach</span></a>
+<a class="pin" style="top:94%" href="https://hdontap.com/stream/475932/" target="_blank" rel="noopener"><span class="dot"></span><span class="label">Crystal Pier</span></a>
+</div>
+<div class="legend"><span><i class="dot" style="background:var(--visual)"></i>Visual available on dashboard</span><span><i class="dot"></i>External cam</span></div>
+<div class="section">
+<div class="row"><div><a href="https://hdontap.com/stream/155380/" target="_blank">Carlsbad Beach</a><div class="meta">HDOnTap</div></div></div>
+<div class="row"><div><a href="https://hdontap.com/stream/177276/" target="_blank">Terramar Point</a><div class="meta">HDOnTap</div></div></div>
+<div class="row"><div><a href="https://www.skylinewebcams.com/en/webcam/united-states/california/encinitas/encinitas-california.html" target="_blank">Moonlight / Encinitas</a><div class="meta">Snapshot available on dashboard</div></div></div>
+<div class="row"><div><a href="https://www.hansensurf.com/pages/live-surf-cams-cardiff-reef-san-diego" target="_blank">Cardiff Reef</a><div class="meta">Hansen's</div></div></div>
+<div class="row"><div><a href="https://hdontap.com/stream/203562/" target="_blank">17th St. Del Mar NW</a><div class="meta">HDOnTap</div></div></div>
+<div class="row"><div><a href="https://hdontap.com/stream/122912/" target="_blank">17th St. Del Mar SW</a><div class="meta">HDOnTap</div></div></div>
+<div class="row"><div><a href="https://hdontap.com/stream/145884/" target="_blank">Del Mar Overlook</a><div class="meta">HDOnTap</div></div></div>
+<div class="row"><div><a href="https://scripps.ucsd.edu/piercam" target="_blank">Scripps Pier</a><div class="meta">UC San Diego / Scripps</div></div></div>
+<div class="row"><div><a href="https://www.ljshoreshotel.com/beach-cam/" target="_blank">La Jolla Shores</a><div class="meta">Live video available on dashboard</div></div></div>
+<div class="row"><div><a href="https://hdontap.com/stream/475932/" target="_blank">Crystal Pier</a><div class="meta">HDOnTap</div></div></div>
+</div>
+</div>
+</body>
+</html>
