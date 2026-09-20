@@ -27,10 +27,10 @@ function windCue(speed, from, gust) {
     strong ? 'strong' : offshore ? 'good' : 'mixed',
     offshore ? (strong ? 'Strong offshore wind near PB / La Jolla; conditions may be challenging.' : 'Offshore wind near PB / La Jolla may help keep faces cleaner.') : onshore ? 'Onshore wind near PB / La Jolla may add chop; check local cams before driving.' : 'Cross-shore wind near PB / La Jolla; texture will vary with beach orientation.'];
 }
-function compass(from) {
+function directionArrow(from) {
   if (!finite(from)) return '';
   const heading = ((from + 180) % 360 + 360) % 360;
-  return `<svg class="compass" viewBox="0 0 64 64" role="img" aria-label="From ${degToCardinal(from)} ${Math.round(from)} degrees; traveling ${degToCardinal(heading)}"><circle cx="32" cy="33" r="22"/><text x="32" y="8" text-anchor="middle">N</text><text x="59" y="36" text-anchor="middle">E</text><text x="32" y="63" text-anchor="middle">S</text><text x="5" y="36" text-anchor="middle">W</text><path class="needle" d="M32 15 L39 30 L34 28 L34 49 L30 49 L30 28 L25 30 Z" transform="rotate(${heading} 32 33)"/></svg>`;
+  return `<span aria-label="traveling ${degToCardinal(heading)}" style="display:inline-block;transform:rotate(${heading}deg)">↑</span> ${degToCardinal(from)}`;
 }
 async function json(url) {
   const r = await fetch(url, {signal:AbortSignal.timeout(15000)});
@@ -54,7 +54,6 @@ async function loadConditions() {
   for (const key of ['swell','wind','tide','water']) { text(key,'—'); text(key+'Detail','Data unavailable'); signal(key+'Signal','Unavailable'); }
   document.getElementById('swellCompass').innerHTML = '';
   document.getElementById('windCompass').innerHTML = '';
-  text('windSummary','Wind data unavailable; use the cams to check local texture.');
   if (mr.status === 'fulfilled' && recentModel(mr.value.current)) {
     const c = mr.value.current, hasSwell = finite(c.swell_wave_height);
     const h = hasSwell ? c.swell_wave_height : c.wave_height;
@@ -66,7 +65,7 @@ async function loadConditions() {
       text('swell',`${mToFt(h).toFixed(1)} ft`);
       text('swellDetail',[finite(p) ? `${p.toFixed(0)}s mean period` : '',finite(d) ? `from ${degToCardinal(d)} ${Math.round(d)}°` : '',`Model ${localTime(c.time*1000)} PT`].filter(Boolean).join(' · '));
       signal('swellSignal',...swellCue(mToFt(h),p));
-      document.getElementById('swellCompass').innerHTML = compass(d);
+      document.getElementById('swellCompass').innerHTML = directionArrow(d);
     }
     if (finite(c.sea_surface_temperature)) {
       available++;
@@ -82,8 +81,8 @@ async function loadConditions() {
       text('wind',`${Math.round(c.wind_speed_10m)} mph`);
       text('windDetail',[finite(c.wind_direction_10m) ? `from ${degToCardinal(c.wind_direction_10m)} ${Math.round(c.wind_direction_10m)}°` : '',finite(c.wind_gusts_10m) ? `gusts ${Math.round(c.wind_gusts_10m)} mph` : ''].filter(Boolean).join(' · '));
       const cue = windCue(c.wind_speed_10m,c.wind_direction_10m,c.wind_gusts_10m);
-      signal('windSignal',cue[0],cue[1]); text('windSummary',cue[2]);
-      document.getElementById('windCompass').innerHTML = compass(c.wind_direction_10m);
+      signal('windSignal',cue[0],cue[1]);
+      document.getElementById('windCompass').innerHTML = directionArrow(c.wind_direction_10m);
     }
   }
   if (tr.status === 'fulfilled' && tr.value.timeZone === 'UTC' && Array.isArray(tr.value.predictions)) {
@@ -109,59 +108,34 @@ function freshWave(w, now = Date.now()) {
   const age = now-waveTime(w,now);
   return finite(w?.hsFt) && w.hsFt>=0 && finite(w?.tpS) && w.tpS>0 && age>=-3600000 && age<=3*3600000;
 }
-function makePick(label, item) {
-  const a = document.createElement('a'); a.className='pick'; a.href='#spot-'+item.id;
-  for (const [tag,value] of [['small',label],['strong',item.name],['span',`${item.w.hsFt.toFixed(1)} ft · ${Math.round(item.w.tpS)}s peak${finite(item.w.direction)?' · from '+degToCardinal(item.w.direction):''}`]]) {
-    const e=document.createElement(tag); e.textContent=value; a.append(e);
-  }
-  return a;
-}
 async function loadWaves() {
-  const picks = document.getElementById('quickPicks'); picks.replaceChildren();
-  text('waveUpdated','');
   try {
     const data = await snapshot('waves');
-    const unique = new Map();
     const now = Date.now();
     document.querySelectorAll('.wave[data-mop]').forEach(el => {
-      const id=el.dataset.mop, w=data.spots?.[id], row=el.closest('.camrow');
-      row.removeAttribute('id'); el.replaceChildren();
-      if (!w || !finite(w.hsFt) || !finite(w.tpS) || w.hsFt<0 || w.tpS<=0) { el.textContent='Unavailable'; return; }
-      const fresh=freshWave(w,now);
-      const values=document.createElement('div'); values.textContent=`${w.hsFt.toFixed(1)} ft · ${Math.round(w.tpS)}s`;
-      el.append(values);
-      if (finite(w.direction)) {
-        const dir=document.createElement('div'), arrow=document.createElement('span');
-        arrow.className='mini-arrow'; arrow.textContent='↑'; arrow.setAttribute('aria-hidden','true'); arrow.style.transform=`rotate(${(w.direction+180)%360}deg)`;
-        dir.append(arrow,` from ${degToCardinal(w.direction)}`); el.append(dir);
+      const w = data.spots?.[el.dataset.mop];
+      el.replaceChildren();
+      if (!w || !finite(w.hsFt) || !finite(w.tpS) || w.hsFt < 0 || w.tpS <= 0) {
+        el.textContent = '—';
+        return;
       }
-      const cue=fresh ? swellCue(w.hsFt,w.tpS) : ['Stale reading','mixed'];
-      const badge=document.createElement('span'); badge.className='signal '+cue[1]; badge.textContent=cue[0]; el.append(badge);
-      if (el.dataset.proxy) { const proxy=document.createElement('div'); proxy.className='source-time'; proxy.textContent=el.dataset.proxy; el.append(proxy); }
-      el.title=`Nearshore model, not breaking height. ${w.date} ${w.timeUTC} UTC`;
-      if (fresh && !unique.has(id)) { row.id='spot-'+id; unique.set(id,{id,w,name:row.querySelector('.camname').textContent}); }
+      const value = document.createElement('span');
+      value.textContent = `${w.hsFt.toFixed(1)} ft · ${Math.round(w.tpS)}s${finite(w.direction) ? ' · ' + degToCardinal(w.direction) : ''}`;
+      el.append(value);
+      if (!freshWave(w, now)) {
+        const stale = document.createElement('span');
+        stale.className = 'signal mixed';
+        stale.textContent = 'stale';
+        el.append(stale);
+      }
+      el.title = `${w.date} ${w.timeUTC} UTC`;
     });
-    let spots=[...unique.values()];
-    // Avoid comparing readings from meaningfully different model times.
-    const newest=Math.max(...spots.map(s=>waveTime(s.w,now)));
-    spots=spots.filter(s=>newest-waveTime(s.w,now)<=3600000).sort((a,b)=>b.w.hsFt-a.w.hsFt);
-    if (!spots.length) { picks.textContent='No fresh nearshore readings. Use the cameras below.'; return; }
-    if (spots.length===1) picks.append(makePick('Available reading',spots[0]));
-    else if (spots[0].w.hsFt-spots.at(-1).w.hsFt<0.3) { picks.append(makePick('Similar size across reporting spots',spots[0])); }
-    else { picks.append(makePick('More size · check the cam',spots[0]),makePick('Less size · check the cam',spots.at(-1))); }
-    const max=spots[0].w.hsFt;
-    document.querySelectorAll('.wave[data-mop]').forEach(el=>{
-      const w=data.spots?.[el.dataset.mop]; if(!freshWave(w,now) || !max) return;
-      const bar=document.createElement('div'),fill=document.createElement('i');bar.className='wave-bar';bar.setAttribute('aria-hidden','true');fill.style.width=Math.min(100,w.hsFt/max*100)+'%';bar.append(fill);el.append(bar);
-    });
-    text('waveUpdated',`CDIP nearshore model · ${spots.length} distinct points · latest ${localTime(newest)} PT. Larger does not always mean better.`);
   } catch {
-    picks.textContent='Nearshore readings unavailable. Use the cameras below.';
-    document.querySelectorAll('.wave').forEach(el=>{el.textContent='Unavailable';});
+    document.querySelectorAll('.wave').forEach(el => { el.textContent = '—'; });
   }
 }
 if (typeof document !== 'undefined') {
   loadConditions(); loadWaves();
   setInterval(loadConditions,15*60*1000); setInterval(loadWaves,10*60*1000);
 }
-if (typeof module !== 'undefined') module.exports={swellCue,windCue,compass,waveTime,freshWave,degToCardinal};
+if (typeof module !== 'undefined') module.exports={swellCue,windCue,directionArrow,waveTime,freshWave,degToCardinal};
