@@ -42,8 +42,8 @@ async function json(url) {
 async function snapshot(name) {
   // Read committed snapshots directly: automated commits do not rebuild Pages.
   const base = 'https://raw.githubusercontent.com/sm00chie/sm00chie.github.io/main/surf/data/';
-  try { return await json(base + name + '.json'); }
-  catch { return await json('./data/' + name + '.json'); }
+  try { return await json('./data/' + name + '.json'); }
+  catch { return await json(base + name + '.json'); }
 }
 function recentModel(c) { return finite(c?.time) && Math.abs(Date.now() - c.time * 1000) <= 3 * 3600000; }
 async function loadConditions() {
