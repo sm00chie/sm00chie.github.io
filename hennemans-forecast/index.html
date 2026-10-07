@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hennemans Surf Forecast</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>Hennemans</h1>
+    <p class="sub">South-facing boulder reef &middot; 32.81&deg;N 117.27&deg;W &middot; La Jolla, San Diego</p>
+  </div>
+  <div class="meta">
+    <div id="updated" class="updated">&mdash;</div>
+    <div id="countdown" class="countdown"></div>
+  </div>
+</header>
+
+<main>
+  <section id="verdict" class="verdict" aria-live="polite">
+    <div class="verdict-head">
+      <span id="verdict-label">Finding the best window&hellip;</span>
+    </div>
+    <div id="verdict-detail" class="verdict-detail"></div>
+  </section>
+
+  <section>
+    <h2>Next 7 days</h2>
+    <div class="tablewrap">
+      <table id="daily">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Rating</th>
+            <th>Best window</th>
+            <th>Model waves</th>
+            <th>Swell</th>
+            <th>Wind</th>
+            <th>Tide</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Hour by hour</h2>
+    <div class="tablewrap">
+      <table id="hourly">
+        <thead>
+          <tr>
+            <th>Local time</th>
+            <th>Rating</th>
+            <th>Model waves</th>
+            <th>Swell</th>
+            <th>Wind</th>
+            <th>Tide</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      Wave heights are Open-Meteo open-water model output, not estimated breaking wave heights at Hennemans. Tides are NOAA CO-OPS predictions for La Jolla (9410230), datum MLLW.
+      Rating is an experimental, uncalibrated swell-first formula, not a published local forecast. A best window represents one forecast hour.
+    </p>
+    <p class="src">
+      Sources:
+      <a href="https://open-meteo.com/" target="_blank" rel="noopener">open-meteo.com</a> (marine + wind),
+      <a href="https://tidesandcurrents.noaa.gov/" target="_blank" rel="noopener">NOAA CO-OPS</a> (tides).
+    </p>
+  </footer>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
