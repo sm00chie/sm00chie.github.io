@@ -130,3 +130,36 @@ footer p { margin: 6px 0; }
 a { color: var(--accent); }
 
 .error { color: var(--bad); }
+
+.week-overview { margin-bottom: 24px; }
+.week-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 2px 0 14px; }
+.week-heading h2 { margin: 0; color: var(--text); font-size: 15px; text-transform: none; letter-spacing: 0; }
+.week-heading > span, .week-note { color: var(--muted); font-size: 12px; }
+.week-cards { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+.day-card { position: relative; display: flex; flex-direction: column; align-items: center; padding: 16px 8px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--text); }
+.day-card.r-good { --quality: var(--good); }
+.day-card.r-ok { --quality: var(--ok); }
+.day-card.r-meh { --quality: var(--meh); }
+.day-card.r-bad { --quality: var(--bad); }
+.day-name { font-weight: 650; font-size: 15px; }
+.day-date { color: var(--muted); font-size: 12px; }
+.wave-icon { width: 52px; height: 40px; margin: 15px 0 8px; color: var(--quality); }
+.day-quality { color: var(--quality); font-weight: 650; font-size: 13px; }
+.day-score { font-size: 32px; font-weight: 750; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.day-score > span { font-size: 13px; color: var(--muted); font-weight: 400; margin-left: 2px; }
+.score-track { width: 70%; height: 4px; border-radius: 4px; background: var(--line); margin: 7px 0 14px; overflow: hidden; }
+.score-track > span { display: block; height: 100%; background: var(--quality); border-radius: inherit; }
+.day-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.best-day { border-color: var(--quality); }
+.day-pick { margin-top: 9px; color: var(--quality); font-size: 10px; font-weight: 650; }
+.week-note { margin: 10px 0 0; }
+.forecast-details { margin-top: 26px; }
+.forecast-details > summary { cursor: pointer; color: var(--accent); padding: 12px 0; font-size: 14px; }
+.forecast-details > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+@media (max-width: 760px) {
+  main { padding: 20px 14px 32px; }
+  .week-cards { display: flex; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x proximity; }
+  .day-card { flex: 0 0 116px; scroll-snap-align: start; }
+  .week-heading { align-items: flex-start; }
+  .week-heading > span { text-align: right; }
+}

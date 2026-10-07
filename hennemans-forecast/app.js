@@ -267,17 +267,8 @@ function renderVerdict(hours) {
   document.getElementById('verdict-label').textContent =
     `Best window: ${dayName(best.when, true)}, ${clock(best.when)}`;
 
-  const bits = [
-    `${ft(best.waveHeight)} open-water waves`,
-    `${swellText(best)} swell`,
-    `${windText(best)} wind`,
-  ];
-  if (best.tide != null) bits.push(`${tideText(best)} tide`);
-  if (best.precip > 0.2) bits.push(`${best.precip.toFixed(1)} mm rain`);
-  if (best.airTemp != null) bits.push(`${Math.round(C_TO_F(best.airTemp))}°F air`);
-
   document.getElementById('verdict-detail').textContent =
-    `Rating ${best.score}/10. ${bits.join(' · ')}.`;
+    `${ratingLabel(best.score)} · ${best.score}/10. See the daily cards above to compare the week.`;
 }
 
 function groupByDay(hours) {
@@ -291,6 +282,41 @@ function groupByDay(hours) {
     day.hours.push(h);
   }
   return days;
+}
+
+function ratingLabel(score) {
+  if (score >= 7) return 'Good';
+  if (score >= 5) return 'Fair';
+  if (score >= 3) return 'Marginal';
+  return 'Poor';
+}
+
+function renderWeek(hours) {
+  const container = document.getElementById('week-cards');
+  const days = groupByDay(hours).slice(0, 7);
+  if (!days.length) {
+    container.innerHTML = '<p class="empty">No daylight forecast available.</p>';
+    return;
+  }
+  const bestScore = Math.max(...days.flatMap(day => day.hours.map(h => h.score)));
+  const today = dayName(new Date());
+  let highlighted = false;
+  container.innerHTML = days.map(day => {
+    const best = day.hours.reduce((a, b) => b.score > a.score ? b : a);
+    const top = !highlighted && best.score === bestScore && bestScore >= 5;
+    if (top) highlighted = true;
+    const date = best.when.toLocaleDateString('en-US', {month: 'short', day: 'numeric', timeZone: SPOT.timeZone});
+    const weekday = day.key === today ? 'Today' : best.when.toLocaleDateString('en-US', {weekday: 'short', timeZone: SPOT.timeZone});
+    return `<article class="day-card ${ratingClass(best.score)}${top ? ' best-day' : ''}" aria-label="${day.key}: ${ratingLabel(best.score)}, ${best.score} out of 10; best at ${clock(best.when)}">
+      <div class="day-name">${weekday}</div><div class="day-date">${date}</div>
+      <svg class="wave-icon" viewBox="0 0 64 44" fill="none" aria-hidden="true"><path d="M5 32c9 0 12-5 17-13C28 9 39 7 48 14c-9-1-13 4-11 9 2 6 10 9 22 9M5 39h54" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="day-quality">${ratingLabel(best.score)}</div>
+      <div class="day-score">${best.score}<span>/10</span></div>
+      <div class="score-track" aria-hidden="true"><span style="width:${best.score * 10}%"></span></div>
+      <div class="day-time">Best ${clock(best.when)}</div>
+      ${top ? '<div class="day-pick">Week’s best</div>' : ''}
+    </article>`;
+  }).join('');
 }
 
 function renderDaily(hours) {
@@ -362,6 +388,7 @@ function renderMeta() {
 
 function render(hours) {
   state.hours = hours;
+  renderWeek(hours);
   renderVerdict(hours);
   renderDaily(hours);
   renderHourly(hours);
@@ -383,6 +410,7 @@ async function refresh() {
     state.nextRefresh = Date.now() + REFRESH_MS;
     renderMeta();
     if (state.hours.length) return;
+    document.getElementById('week-cards').innerHTML = '<p class="empty error">Forecast unavailable. Please try again later.</p>';
     document.getElementById('verdict-label').innerHTML =
       `<span class="error">Could not load forecast</span>`;
     document.getElementById('verdict-detail').textContent = String(err.message || err);
