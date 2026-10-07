@@ -319,60 +319,27 @@ function renderWeek(hours) {
   }).join('');
 }
 
-function renderDaily(hours) {
-  const tbody = document.querySelector('#daily tbody');
-  tbody.innerHTML = '';
+function renderBreakdown(hours) {
+  const container = document.getElementById('daily-breakdown');
+  const openDays = new Set(Array.from(container.querySelectorAll('details[open]'), el => el.dataset.day));
   const days = groupByDay(hours).slice(0, 7);
-
   if (!days.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="empty">No forecast hours available.</td></tr>';
+    container.innerHTML = '<p class="empty">No daylight forecast available.</p>';
     return;
   }
-
-  for (const day of days) {
-    const best = day.hours.reduce((a, b) => (b.score > a.score ? b : a));
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${day.key}</td>
-      <td><span class="rating ${ratingClass(best.score)}">${best.score}</span></td>
-      <td>${clock(best.when)}</td>
-      <td class="num">${ft(best.waveHeight)}</td>
-      <td>${swellText(best)}</td>
-      <td>${windText(best)}</td>
-      <td>${tideText(best)}</td>
-    `;
-    tbody.appendChild(tr);
-  }
-}
-
-function renderHourly(hours) {
-  const tbody = document.querySelector('#hourly tbody');
-  tbody.innerHTML = '';
-  const now = new Date();
-  const next = hours
-    .filter((h) => h.when >= now - 36e5 && isDaylight(h))
-    .slice(0, 72);
-
-  if (!next.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="empty">No forecast hours available.</td></tr>';
-    return;
-  }
-
-  let lastDay = null;
-  for (const h of next) {
-    const label = dayName(h.when);
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${label !== lastDay ? `<strong>${label}</strong> ${clock(h.when)}` : clock(h.when)}</td>
-      <td><span class="rating ${ratingClass(h.score)}">${h.score}</span></td>
+  container.innerHTML = days.map(day => {
+    const best = day.hours.reduce((a, b) => b.score > a.score ? b : a);
+    const rows = day.hours.map(h => `<tr>
+      <td>${clock(h.when)}</td>
+      <td><span class="rating ${ratingClass(h.score)}">${h.score}/10</span></td>
       <td class="num">${ft(h.waveHeight)}</td>
-      <td>${swellText(h)}</td>
-      <td>${windText(h)}</td>
-      <td>${tideText(h)}</td>
-    `;
-    tbody.appendChild(tr);
-    lastDay = label;
-  }
+      <td>${swellText(h)}</td><td>${windText(h)}</td><td>${tideText(h)}</td>
+    </tr>`).join('');
+    return `<details class="day-details" data-day="${day.key}"${openDays.has(day.key) ? ' open' : ''}>
+      <summary><span class="detail-day">${day.key}</span><span class="detail-quality"><span class="rating ${ratingClass(best.score)}">${best.score}/10</span> ${ratingLabel(best.score)}</span><span class="detail-time">Best ${clock(best.when)}</span></summary>
+      <div class="tablewrap"><table aria-label="${day.key} daylight hourly forecast"><thead><tr><th>Pacific time</th><th>Rating</th><th>Model waves</th><th>Swell</th><th>Wind</th><th>Tide</th></tr></thead><tbody>${rows}</tbody></table></div>
+    </details>`;
+  }).join('');
 }
 
 function renderMeta() {
@@ -390,8 +357,7 @@ function render(hours) {
   state.hours = hours;
   renderWeek(hours);
   renderVerdict(hours);
-  renderDaily(hours);
-  renderHourly(hours);
+  renderBreakdown(hours);
   renderMeta();
 }
 
@@ -411,6 +377,7 @@ async function refresh() {
     renderMeta();
     if (state.hours.length) return;
     document.getElementById('week-cards').innerHTML = '<p class="empty error">Forecast unavailable. Please try again later.</p>';
+    document.getElementById('daily-breakdown').innerHTML = '<p class="empty">Daily details will appear when the forecast loads.</p>';
     document.getElementById('verdict-label').innerHTML =
       `<span class="error">Could not load forecast</span>`;
     document.getElementById('verdict-detail').textContent = String(err.message || err);

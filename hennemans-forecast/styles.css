@@ -153,9 +153,22 @@ a { color: var(--accent); }
 .best-day { border-color: var(--quality); }
 .day-pick { margin-top: 9px; color: var(--quality); font-size: 10px; font-weight: 650; }
 .week-note { margin: 10px 0 0; }
-.forecast-details { margin-top: 26px; }
-.forecast-details > summary { cursor: pointer; color: var(--accent); padding: 12px 0; font-size: 14px; }
-.forecast-details > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.daily-breakdown { margin-top: 26px; }
+.day-details { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); margin-bottom: 8px; overflow: hidden; }
+.day-details > summary { cursor: pointer; padding: 15px 16px; display: grid; grid-template-columns: 16px 1fr 140px 125px; align-items: center; gap: 12px; list-style: none; font-size: 14px; }
+.day-details > summary::-webkit-details-marker { display: none; }
+.day-details > summary::before { content: '›'; color: var(--muted); font-size: 22px; line-height: 1; transition: transform .15s; }
+.day-details[open] > summary::before { transform: rotate(90deg); }
+.day-details > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+.detail-day { font-weight: 600; }
+.detail-quality { font-size: 12px; color: var(--muted); }
+.detail-quality .rating { font-size: 11px; margin-right: 6px; }
+.detail-time { font-size: 12px; color: var(--muted); text-align: right; }
+.day-details .tablewrap { border-radius: 0; border-width: 1px 0 0; }
+@media (max-width: 480px) {
+  .day-details > summary { grid-template-columns: 12px 1fr auto; gap: 8px; padding: 13px 12px; }
+  .detail-time { grid-column: 2 / -1; text-align: left; }
+}
 @media (max-width: 760px) {
   main { padding: 20px 14px 32px; }
   .week-cards { display: flex; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x proximity; }
