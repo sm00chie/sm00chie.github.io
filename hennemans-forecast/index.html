@@ -10,7 +10,7 @@
 <header class="top">
   <div>
     <h1>Hennemans</h1>
-    <p class="sub">South-facing boulder reef &middot; 32.81&deg;N 117.27&deg;W &middot; La Jolla, San Diego</p>
+    <p class="sub">Boulder reef &middot; 32.81&deg;N 117.27&deg;W &middot; La Jolla, San Diego</p>
   </div>
   <div class="meta">
     <div id="updated" class="updated">&mdash;</div>
@@ -22,7 +22,7 @@
   <section class="week-overview" aria-labelledby="week-heading">
     <div class="week-heading"><h2 id="week-heading">Your week at a glance</h2><span>Hennemans · Pacific time</span></div>
     <div id="week-cards" class="week-cards" aria-live="polite"><p class="empty">Loading your week&hellip;</p></div>
-    <p class="week-note">One score per day, based on its best remaining daylight hour. Higher is better.</p>
+    <p class="week-note">Daily score balances the best hour with typical daylight conditions. Best-hour score appears below it.</p>
   </section>
   <section id="verdict" class="verdict" aria-live="polite">
     <div class="verdict-head">
@@ -36,10 +36,17 @@
     <div id="daily-breakdown"><p class="empty">Loading daily forecasts&hellip;</p></div>
   </section>
 
+  <details class="methodology"><summary>How the ratings work</summary>
+    <p>West swell and northeast offshore wind are favored. Swell height and period set the potential; strong onshore wind and insufficient water over the reef reduce the whole score.</p>
+    <p>Daily score: 45% best hour + 55% median of remaining daylight hours, including low-tide hours. Today covers the daylight still ahead. A good daily score starts at 7/10; fair at 5; marginal at 3. Best windows require at least 5/10 and a known tide above the low-water cutoff.</p>
+    <p>The 1.5–3 ft tide transition is a starting assumption awaiting local calibration. There is no upper-tide penalty until we establish when high water swamps this break.</p>
+    <p>Spot references: <a href="https://www.surf-forecast.com/breaks/Hennemans">Surf-Forecast</a> (west swell, northeast wind) and <a href="https://www.surfspots.co/spot/hennemans">SurfSpots</a> (mid-to-high tide).</p>
+  </details>
+
   <footer>
     <p>
       Wave heights are Open-Meteo open-water model output, not estimated breaking wave heights at Hennemans. Tides are NOAA CO-OPS predictions for La Jolla (9410230), datum MLLW.
-      Rating is an experimental, uncalibrated swell-first formula, not a published local forecast. A best window represents one forecast hour.
+      Rating is experimental. Tide limits are provisional: at or below 1.5 ft MLLW is “Too low”; 1.5–3 ft progressively reduces the whole score; 3 ft and above gets full tide credit. Missing tide data means no rating. A best window represents one forecast hour.
     </p>
     <p class="src">
       Sources:

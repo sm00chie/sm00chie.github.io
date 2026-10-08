@@ -28,59 +28,75 @@ const state = {
 
 /* ---------------------------------------------------------------- scoring */
 
-// A south-facing reef likes southerly swell. Perfect window is 180-225 deg.
+// Spot guides favor west swell and northeast offshore wind. These curves
+// are qualitative defaults, not a local refraction or breaking-wave model.
+const TIDE_RULES = { minimumFt: 1.5, fullCreditFt: 3.0 };
+const clamp = value => Math.max(0, Math.min(1, value));
+function angleDifference(a, b) {
+  return Math.abs(((a - b + 540) % 360) - 180);
+}
 function directionScore(deg) {
-  if (deg == null) return 0;
-  let off = Math.abs(deg - 205);
-  if (off > 180) off = 360 - off;
-  if (off <= 30) return 1;      // dead south to SSW
-  if (off <= 60) return 0.65;
-  if (off <= 85) return 0.3;
-  return 0.08;                  // north or west swell does not wrap in here
+  if (!Number.isFinite(deg)) return 0;
+  const off = angleDifference(deg, 270);
+  if (off <= 30) return 1;
+  if (off <= 60) return 0.75;
+  if (off <= 90) return 0.4;
+  return 0.1;
 }
-
-// 0 m -> 0, ramps to full credit at ~0.9 m and stays there. Rewards size
-// without pretending 3 m of empty air is better than 1.5 m of shape.
 function heightScore(m) {
-  if (m == null) return 0;
-  return Math.min(1, m / 0.9);
+  return Number.isFinite(m) ? clamp(m / 0.9) : 0;
 }
-
-// Longer period = more shape and more push over the boulder. 17 s is plenty.
-function periodScore(s) {
-  if (s == null) return 0;
-  return Math.min(1, Math.max(0, (s - 8) / 9));
+function periodScore(seconds) {
+  return Number.isFinite(seconds) ? clamp((seconds - 8) / 9) : 0;
 }
-
-// Wind direction is where-from, like the swell. For a south-facing break the
-// offshore directions are roughly 280-360 (NW through N).
 function windScore(dirDeg, speedMs) {
-  if (dirDeg == null) return 0.4;
-  const off = Math.abs(dirDeg - 330);
-  const wrapped = off > 180 ? 360 - off : off;
-  // 0 deg = straight offshore, 180 deg = straight onshore.
-  const quality = 1 - wrapped / 180;
-  const strength = speedMs == null ? 0.5 : Math.min(1, 7 / Math.max(speedMs, 0.1));
-  return Math.max(0, quality * 0.75 + strength * 0.25);
+  if (!Number.isFinite(speedMs)) return null;
+  // Calm is favorable regardless of its unreliable direction reading.
+  if (speedMs <= 2) return 1;
+  if (!Number.isFinite(dirDeg)) return null;
+  const off = angleDifference(dirDeg, 45);
+  // NE offshore; SW onshore. Strong offshore winds also lose some credit.
+  if (off <= 60) return 1 - 0.5 * clamp((speedMs - 6) / 10);
+  if (off <= 120) return 1 - 0.85 * clamp((speedMs - 3) / 9);
+  return 1 - clamp((speedMs - 2) / 10);
 }
-
-// Boulder reef: dead low drains onto shallow rock and the wave stands up, dead
-// high floods the inside. Best through the middle of the tide.
 function tideScore(ft) {
-  if (ft == null) return 0.5;
-  if (ft < 0.5) return 0.35;
-  if (ft < 1.5) return 0.75;
-  if (ft <= 3.5) return 1;
-  if (ft <= 5.0) return 0.8;
-  return 0.55;
+  if (!Number.isFinite(ft)) return null;
+  // Provisional MLLW limits: low water blocks the entire rating. Mid/high
+  // gets full credit; there is no evidence-based upper cutoff yet.
+  return clamp((ft - TIDE_RULES.minimumFt) /
+    (TIDE_RULES.fullCreditFt - TIDE_RULES.minimumFt));
 }
-
 function scoreHour(h) {
-  // Require actual swell energy before wind and tide can improve the rating.
+  const tide = tideScore(h.tide);
+  const wind = windScore(h.windDirection, h.windSpeed);
+  if (tide === 0) return 0;
+  if (tide == null || wind == null ||
+      ![h.swellHeight, h.swellPeriod, h.swellDirection].every(Number.isFinite)) return null;
   const energy = heightScore(h.swellHeight) * periodScore(h.swellPeriod);
-  const exposure = directionScore(h.swellDirection);
-  const conditions = windScore(h.windDirection, h.windSpeed) * 0.75 + tideScore(h.tide) * 0.25;
-  return Math.round(10 * energy * (0.7 * exposure + 0.3 * conditions));
+  const base = energy * directionScore(h.swellDirection);
+  // Keep the clarified two-layer wind blend, but require swell energy and
+  // multiply the whole result by tide suitability. Size cannot outvote tide.
+  const quality = (base * 0.78 + energy * wind * 0.22) * (0.45 + 0.55 * wind);
+  return Math.round(10 * clamp(quality * tide));
+}
+function hourStatus(h) {
+  if (tideScore(h.tide) === 0) return 'Too low';
+  if (h.score == null) return 'Data missing';
+  return ratingLabel(h.score);
+}
+function summarizeDay(day) {
+  const rated = day.hours.filter(h => Number.isFinite(h.score));
+  const eligible = rated.filter(h => tideScore(h.tide) > 0);
+  const best = eligible.length ? eligible.reduce((a, b) => b.score > a.score ? b : a) : null;
+  const scores = rated.map(h => h.score).sort((a, b) => a - b);
+  const middle = Math.floor(scores.length / 2);
+  const median = scores.length ? (scores.length % 2 ? scores[middle] : (scores[middle - 1] + scores[middle]) / 2) : 0;
+  // Missing input must not silently make a day look good or bad.
+  const score = rated.length === day.hours.length
+    ? Math.round(0.45 * (best?.score ?? 0) + 0.55 * median) : null;
+  const label = score == null ? 'Data missing' : !best ? 'Too low' : ratingLabel(score);
+  return { best, score, label };
 }
 
 /* ------------------------------------------------------------ tide lookup */
@@ -119,7 +135,7 @@ async function getJSON(url) {
 
 function tideURL() {
   const today = new Date(Date.now() - 864e5);
-  const end = new Date(today.getTime() + 8 * 864e5);
+  const end = new Date(Date.now() + 9 * 864e5);
   const fmt = (d) => d.toISOString().slice(0, 10).replace(/-/g, '');
   const p = new URLSearchParams({
     product: 'predictions',
@@ -152,7 +168,7 @@ async function loadForecast() {
   const [marine, wind, tides] = await Promise.all([
     getJSON(marineURL),
     getJSON(windURL),
-    getJSON(tideURL()).catch(() => null), // tides are a bonus, not a blocker
+    getJSON(tideURL()).catch(() => null), // retain other data, but do not rate unknown tides
   ]);
 
   const tideAt = tides && tides.predictions ? buildTideCurve(tides.predictions) : () => null;
@@ -223,6 +239,7 @@ function dayName(d, withDate) {
 }
 
 function ratingClass(score) {
+  if (score == null) return 'r-unknown';
   if (score >= 7) return 'r-good';
   if (score >= 5) return 'r-ok';
   if (score >= 3) return 'r-meh';
@@ -254,12 +271,14 @@ function renderVerdict(hours) {
   const now = new Date();
   const horizon = new Date(now.getTime() + 7 * 864e5);
   const candidates = hours.filter(
-    (h) => h.when >= now && h.when <= horizon && isDaylight(h) && h.score >= 4
+    (h) => h.when >= now && h.when <= horizon && isDaylight(h) && h.score >= 5 && tideScore(h.tide) > 0
   );
   if (!candidates.length) {
-    document.getElementById('verdict-label').textContent = 'No strong model signal this week';
+    document.getElementById('verdict-label').textContent = 'No recommended window this week';
     document.getElementById('verdict-detail').textContent =
-      'Every daylight hour in the next 7 days scores below 4. This experimental rating may miss local conditions.';
+      hours.some(h => h.when >= now && isDaylight(h) && h.score == null)
+        ? 'Some ratings are unavailable because tide, wind, or swell data is missing.'
+        : 'No daylight hour clears the tide limits and reaches 5/10.';
     return;
   }
   const best = candidates.reduce((a, b) => (b.score > a.score ? b : a));
@@ -268,7 +287,7 @@ function renderVerdict(hours) {
     `Best window: ${dayName(best.when, true)}, ${clock(best.when)}`;
 
   document.getElementById('verdict-detail').textContent =
-    `${ratingLabel(best.score)} · ${best.score}/10. See the daily cards above to compare the week.`;
+    `${ratingLabel(best.score)} · best hour ${best.score}/10 · tide ${tideText(best)}. Daily cards also account for the rest of the day.`;
 }
 
 function groupByDay(hours) {
@@ -285,6 +304,7 @@ function groupByDay(hours) {
 }
 
 function ratingLabel(score) {
+  if (score == null) return 'Data missing';
   if (score >= 7) return 'Good';
   if (score >= 5) return 'Fair';
   if (score >= 3) return 'Marginal';
@@ -298,22 +318,23 @@ function renderWeek(hours) {
     container.innerHTML = '<p class="empty">No daylight forecast available.</p>';
     return;
   }
-  const bestScore = Math.max(...days.flatMap(day => day.hours.map(h => h.score)));
+  const bestScore = Math.max(...days.map(day => summarizeDay(day).score ?? -1));
   const today = dayName(new Date());
   let highlighted = false;
   container.innerHTML = days.map(day => {
-    const best = day.hours.reduce((a, b) => b.score > a.score ? b : a);
-    const top = !highlighted && best.score === bestScore && bestScore >= 5;
+    const { best, score, label } = summarizeDay(day);
+    const reference = day.hours[0];
+    const top = !highlighted && score === bestScore && bestScore >= 5;
     if (top) highlighted = true;
-    const date = best.when.toLocaleDateString('en-US', {month: 'short', day: 'numeric', timeZone: SPOT.timeZone});
-    const weekday = day.key === today ? 'Today' : best.when.toLocaleDateString('en-US', {weekday: 'short', timeZone: SPOT.timeZone});
-    return `<article class="day-card ${ratingClass(best.score)}${top ? ' best-day' : ''}" aria-label="${day.key}: ${ratingLabel(best.score)}, ${best.score} out of 10; best at ${clock(best.when)}">
+    const date = reference.when.toLocaleDateString('en-US', {month: 'short', day: 'numeric', timeZone: SPOT.timeZone});
+    const weekday = day.key === today ? 'Today' : reference.when.toLocaleDateString('en-US', {weekday: 'short', timeZone: SPOT.timeZone});
+    return `<article class="day-card ${ratingClass(score)}${top ? ' best-day' : ''}" aria-label="${day.key}: ${label}, ${score ?? 'unavailable'} out of 10">
       <div class="day-name">${weekday}</div><div class="day-date">${date}</div>
       <svg class="wave-icon" viewBox="0 0 64 44" fill="none" aria-hidden="true"><path d="M5 32c9 0 12-5 17-13C28 9 39 7 48 14c-9-1-13 4-11 9 2 6 10 9 22 9M5 39h54" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <div class="day-quality">${ratingLabel(best.score)}</div>
-      <div class="day-score">${best.score}<span>/10</span></div>
-      <div class="score-track" aria-hidden="true"><span style="width:${best.score * 10}%"></span></div>
-      <div class="day-time">Best ${clock(best.when)}</div>
+      <div class="day-quality">${label}</div>
+      <div class="day-score">${score ?? '—'}<span>/10</span></div>
+      <div class="score-track" aria-hidden="true"><span style="width:${(score ?? 0) * 10}%"></span></div>
+      <div class="day-time">${best && best.score > 0 ? `Best ${clock(best.when)} · ${best.score}/10` : 'No rated window'}</div>
       ${top ? '<div class="day-pick">Week’s best</div>' : ''}
     </article>`;
   }).join('');
@@ -328,15 +349,15 @@ function renderBreakdown(hours) {
     return;
   }
   container.innerHTML = days.map(day => {
-    const best = day.hours.reduce((a, b) => b.score > a.score ? b : a);
+    const { best, score, label } = summarizeDay(day);
     const rows = day.hours.map(h => `<tr>
       <td>${clock(h.when)}</td>
-      <td><span class="rating ${ratingClass(h.score)}">${h.score}/10</span></td>
+      <td><span class="rating ${ratingClass(h.score)}">${h.score == null ? '—' : `${h.score}/10`}</span><span class="hour-status">${hourStatus(h)}</span></td>
       <td class="num">${ft(h.waveHeight)}</td>
       <td>${swellText(h)}</td><td>${windText(h)}</td><td>${tideText(h)}</td>
     </tr>`).join('');
     return `<details class="day-details" data-day="${day.key}"${openDays.has(day.key) ? ' open' : ''}>
-      <summary><span class="detail-day">${day.key}</span><span class="detail-quality"><span class="rating ${ratingClass(best.score)}">${best.score}/10</span> ${ratingLabel(best.score)}</span><span class="detail-time">Best ${clock(best.when)}</span></summary>
+      <summary><span class="detail-day">${day.key}</span><span class="detail-quality"><span class="rating ${ratingClass(score)}">${score == null ? '—' : `${score}/10`}</span> ${label}</span><span class="detail-time">${best && best.score > 0 ? `Best ${clock(best.when)} · ${best.score}/10` : 'No rated window'}</span></summary>
       <div class="tablewrap"><table aria-label="${day.key} daylight hourly forecast"><thead><tr><th>Pacific time</th><th>Rating</th><th>Model waves</th><th>Swell</th><th>Wind</th><th>Tide</th></tr></thead><tbody>${rows}</tbody></table></div>
     </details>`;
   }).join('');

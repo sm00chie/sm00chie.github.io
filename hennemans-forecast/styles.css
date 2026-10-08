@@ -176,3 +176,13 @@ a { color: var(--accent); }
   .week-heading { align-items: flex-start; }
   .week-heading > span { text-align: right; }
 }
+
+.r-unknown { background: var(--line); color: var(--text); }
+.day-card.r-unknown { --quality: var(--muted); background: var(--panel); }
+.hour-status { margin-left: 8px; font-size: 11px; color: var(--muted); }
+.methodology { margin-top: 22px; color: var(--muted); font-size: 13px; }
+.methodology > summary { cursor: pointer; color: var(--accent); padding: 10px 0; }
+.day-details > summary { grid-template-columns: 16px 1fr 145px 155px; }
+@media (max-width: 480px) { .day-details > summary { grid-template-columns: 12px 1fr auto; } }
+
+.day-time { white-space: normal; text-align: center; line-height: 1.5; min-height: 33px; }
